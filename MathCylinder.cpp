@@ -20,9 +20,12 @@ double Potential(double x,double y,double  E0, double R){
 	r=sqrt(pow(x,2) + pow(y,2));
 	
 	
-	
-	
-	V=(double)-E0*(r-(pow(R,2)/r))*cos(theta);
+	if (r<R){
+		V=0;
+	}
+	else{
+		V=(double)-E0*(r-(pow(R,2)/r))*cos(theta);
+	}
 	
 	/*
 	cout<<theta<<endl;
