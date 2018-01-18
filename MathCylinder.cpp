@@ -16,25 +16,18 @@ inbetween two charged plates,  with a grounded wire stretched through the middle
 // given a Cartesian coordinate, this function generates its potential using analytical solution.
 double Potential(double x,double y,double  E0, double R){
 	double theta=0, r=0, V=0;
+	
+	// CONVERT MATRIX COORDINATES INTO POLAR
 	theta=atan2(x,y);
 	r=sqrt(pow(x,2) + pow(y,2));
 	
-	
+	//SET GROUND CONDITIONS, THE REST OF THE FIELD FOLLOWS ANALYTICAL SOLUTION
 	if (r<R){
 		V=0;
 	}
 	else{
 		V=(double)-E0*(r-(pow(R,2)/r))*cos(theta);
 	}
-	
-	/*
-	cout<<theta<<endl;
-	cout<<r<<endl;
-	cout<<endl;
-	cout<<endl;
-	cout<<"potential:" << V<<endl;
-	cout<<endl;
-	*/
 	
 	return V;
 }
@@ -81,11 +74,10 @@ int main(){
 	
 
 	
-	
+	//POPULATING ARRAY
 	for (int i=0; i<length; i++){
 		for (int j=0; j<width;j++){
 			double pos[2]={j*dx,i*dy};             // Index positon on the grid with respects used to find distance from midpoint which is seen as origin.
-			cout<<"new"<<endl;
 			double xval=midpnt-pos[0];
 			double yval=midpnt-pos[1];
 			
@@ -98,7 +90,7 @@ int main(){
 		
 	}
 	
-	// WRITING FIELD INTO DATA FILE
+	// WRITING ARRAY INTO DATA FILE
 	ofstream goobster ("field.dat");
 	
 	for (int i=0; i<length; i++){
