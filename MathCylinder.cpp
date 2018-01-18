@@ -16,21 +16,22 @@ inbetween two charged plates,  with a grounded wire stretched through the middle
 // given a Cartesian coordinate, this function generates its potential using analytical solution.
 double Potential(double x,double y,double  E0, double R){
 	double theta=0, r=0, V=0;
-	theta=atan(x/y);
+	theta=atan2(x,y);
 	r=sqrt(pow(x,2) + pow(y,2));
+	
 	
 	
 	
 	V=(double)-E0*(r-(pow(R,2)/r))*cos(theta);
 	
-	
+	/*
 	cout<<theta<<endl;
 	cout<<r<<endl;
 	cout<<endl;
 	cout<<endl;
 	cout<<"potential:" << V<<endl;
 	cout<<endl;
-	
+	*/
 	
 	return V;
 }
