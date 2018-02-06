@@ -1,12 +1,29 @@
 #include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-int main() {
+int main(int argc, char *argv[]) {
 	int width, height, bpp;
+	char filename[25]="";
 
-	unsigned char *rgb_image = stbi_load("smiley.png", &width, &height, &bpp, 1);
+	if(argc!=2){
+		puts("Please use the following syntax:");
+		puts("<program_name> <image_name>.png");
+		exit(1);
+	}
+
+	strcpy(filename, argv[1]);
+	
+	if(fopen(filename, "r")==NULL){
+		printf("Failed to open %s. Please check the file and try\ 
+ again\n.", filename);
+		exit(2);
+	}
+
+	unsigned char *rgb_image=stbi_load(filename, &width, &height, &bpp, 1);
     
 	for(int i=0; i<height; i++){
 		for(int j=0; j<width; j++){
@@ -16,7 +33,7 @@ int main() {
 		printf("\n");
 	}
 
-    stbi_image_free(rgb_image);
+	stbi_image_free(rgb_image);
 
-    return 0;
+	return 0;
 }
