@@ -33,6 +33,10 @@ void lineWidget::mousePressEvent(QMouseEvent* event){
         mLine.setP1(event->pos());
         mLine.setP2(event->pos());
     }
+    else if (SelectedTool == 3){
+        mArc.setTopLeft(event->pos());
+        mArc.setBottomRight(event->pos());
+    }
 }
 
 
@@ -48,6 +52,9 @@ void lineWidget::mouseMoveEvent(QMouseEvent* event){
         }
         else if (SelectedTool == 2){
             mLine.setP2(event->pos());
+        }
+        else if (SelectedTool == 3){
+            mArc.setBottomRight(event->pos());
         }
     }
 
@@ -67,17 +74,18 @@ void lineWidget::mouseReleaseEvent(QMouseEvent *event){
 void lineWidget::paintEvent(QPaintEvent *event){
 
     painter.begin(this);
-
     //When the mouse is pressed
     if(mousePressed){
         // we are taking QPixmap reference again and again
         //on mouse move and drawing a line again and again
         //hence the painter view has a feeling of dynamic drawing
         painter.drawPixmap(0,0,mPix);
+
         if(SelectedTool == 1)
             painter.drawRect(mRect);
         else if(SelectedTool == 2)
             painter.drawLine(mLine);
+
 
         drawStarted = true;
     }
@@ -87,10 +95,20 @@ void lineWidget::paintEvent(QPaintEvent *event){
         // using that object, then sets the earlier painter object
         // with the newly modified QPixmap object
         QPainter tempPainter(&mPix);
-        if(SelectedTool == 1)
-            tempPainter.drawRect(mRect);
+
+        if(SelectedTool == 1){
+
+            tempPainter.drawRect(mRect);}
         else if(SelectedTool == 2)
             tempPainter.drawLine(mLine);
+        else if(SelectedTool == 3){
+            tempPainter.setBrush(QBrush(Qt::red));
+            tempPainter.drawEllipse(mArc);}
+        else if (SelectedTool == 4)
+            //tempPainter.fillRect(mArc,Qt::black);
+            //mPix = QPixmap(400,400);
+
+            mPix.fill(Qt::white);
 
         painter.drawPixmap(0,0,mPix);
     }
@@ -114,18 +132,24 @@ void lineWidget::on_btnRect_clicked()
     SelectedTool = 1;
 }
 
+void lineWidget::on_btnArc_clicked()
+{
+    SelectedTool = 3;
+    //void QPainter::drawArc(100,199,59,39,79,78)
+}
+
 void lineWidget::on_btnSave_clicked()
 {
-    QFile file("datpic.pbm");
+    QFile file("datpic.bmp");
     //file.open(QIODevice::WriteOnly);
-    mPix.save(&file,"PBM",-1);
+    mPix.save(&file,"BMP",-1);
     QCoreApplication::applicationFilePath();
 }
 
 void lineWidget::on_btnClear_clicked()
 {
-    //ui->setupUi(this);
-    mPix = QPixmap(400,400);
-    mPix.fill(Qt::white);
-    SelectedTool = 3;
+    //mPix = QPixmap(400,400);
+    //mPix.fill(Qt::white);
+
+    SelectedTool = 4;
 }

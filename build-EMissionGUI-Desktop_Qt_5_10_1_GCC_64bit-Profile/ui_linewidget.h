@@ -25,6 +25,7 @@ class Ui_lineWidget
 public:
     QPushButton *pushButton;
     QSlider *horizontalSlider;
+    QPushButton *pushButton_2;
 
     void setupUi(QWidget *lineWidget)
     {
@@ -39,6 +40,9 @@ public:
         horizontalSlider->setObjectName(QStringLiteral("horizontalSlider"));
         horizontalSlider->setGeometry(QRect(460, 410, 160, 16));
         horizontalSlider->setOrientation(Qt::Horizontal);
+        pushButton_2 = new QPushButton(lineWidget);
+        pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
+        pushButton_2->setGeometry(QRect(220, 180, 84, 28));
 
         retranslateUi(lineWidget);
         QObject::connect(pushButton, SIGNAL(clicked()), lineWidget, SLOT(close()));
@@ -51,6 +55,7 @@ public:
     {
         lineWidget->setWindowTitle(QApplication::translate("lineWidget", "lineWidget", nullptr));
         pushButton->setText(QApplication::translate("lineWidget", "Close", nullptr));
+        pushButton_2->setText(QApplication::translate("lineWidget", "PushButton", nullptr));
     } // retranslateUi
 
 };
