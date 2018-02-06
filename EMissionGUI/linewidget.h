@@ -48,6 +48,7 @@ protected:
 private slots:
     void on_btnLine_clicked();
     void on_btnRect_clicked();
+    void on_btnArc_clicked();
     void on_btnSave_clicked();
     void on_btnClear_clicked();
 
@@ -59,6 +60,7 @@ private:
 
     QLine mLine;
     QRect mRect;
+    QRect mArc;
 };
 
 

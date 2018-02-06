@@ -33,6 +33,10 @@ void lineWidget::mousePressEvent(QMouseEvent* event){
         mLine.setP1(event->pos());
         mLine.setP2(event->pos());
     }
+    else if (SelectedTool == 3){
+        mArc.setTopLeft(event->pos());
+        mArc.setBottomRight(event->pos());
+    }
 }
 
 
@@ -48,6 +52,9 @@ void lineWidget::mouseMoveEvent(QMouseEvent* event){
         }
         else if (SelectedTool == 2){
             mLine.setP2(event->pos());
+        }
+        else if (SelectedTool == 3){
+            mArc.setBottomRight(event->pos());
         }
     }
 
@@ -79,6 +86,7 @@ void lineWidget::paintEvent(QPaintEvent *event){
         else if(SelectedTool == 2)
             painter.drawLine(mLine);
 
+
         drawStarted = true;
     }
     else if (drawStarted){
@@ -87,12 +95,20 @@ void lineWidget::paintEvent(QPaintEvent *event){
         // using that object, then sets the earlier painter object
         // with the newly modified QPixmap object
         QPainter tempPainter(&mPix);
-        if(SelectedTool == 1)
-            tempPainter.drawRect(mRect);
+
+        if(SelectedTool == 1){
+
+            tempPainter.drawRect(mRect);}
         else if(SelectedTool == 2)
             tempPainter.drawLine(mLine);
-        else if(SelectedTool == 3)
-            tempPainter.fillRect(mRect,Qt::black);
+        else if(SelectedTool == 3){
+            tempPainter.setBrush(QBrush(Qt::red));
+            tempPainter.drawEllipse(mArc);}
+        else if (SelectedTool == 4)
+            //tempPainter.fillRect(mArc,Qt::black);
+            //mPix = QPixmap(400,400);
+
+            mPix.fill(Qt::white);
 
         painter.drawPixmap(0,0,mPix);
     }
@@ -116,6 +132,12 @@ void lineWidget::on_btnRect_clicked()
     SelectedTool = 1;
 }
 
+void lineWidget::on_btnArc_clicked()
+{
+    SelectedTool = 3;
+    //void QPainter::drawArc(100,199,59,39,79,78)
+}
+
 void lineWidget::on_btnSave_clicked()
 {
     QFile file("datpic.bmp");
@@ -128,8 +150,6 @@ void lineWidget::on_btnClear_clicked()
 {
     //mPix = QPixmap(400,400);
     //mPix.fill(Qt::white);
-    mPix = QPixmap(400,400);
-    mPix.fill(Qt::white);
-    painter.resetMatrix();
-    SelectedTool = 3;
+
+    SelectedTool = 4;
 }

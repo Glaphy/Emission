@@ -24,6 +24,7 @@ public:
     //POINTERS TO SHAPES HERE
     QPushButton *btnLine;
     QPushButton *btnRect;
+    QPushButton *btnArc;
     QPushButton *btnSave;
     QPushButton *btnClear;
 
@@ -49,10 +50,9 @@ public:
 
 
         verticalLayout = new QVBoxLayout(widget);
-        verticalLayout->setSpacing(500);
-        verticalLayout->setContentsMargins(0,0,0,0);
+        verticalLayout->setSpacing(010);
+        verticalLayout->setContentsMargins(0,40,0,0);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
-
 
 
         btnLine = new QPushButton(widget);
@@ -64,6 +64,10 @@ public:
         btnRect->setObjectName(QStringLiteral("btnRect"));
         verticalLayout->addWidget(btnRect);
 
+
+        btnArc = new QPushButton(widget);
+        btnArc->setObjectName(QStringLiteral("btnArc"));
+        verticalLayout->addWidget(btnArc);
 
         btnSave = new QPushButton(widgetSave);
         btnSave->setObjectName(QStringLiteral("btnSave"));
@@ -84,6 +88,7 @@ public:
         btnRect->setText(QApplication::translate("lineWidget","Rectangle",0));
         btnSave->setText(QApplication::translate("lineWidget","Save",0));
         btnClear->setText(QApplication::translate("lineWidget","Clear",0));
+        btnArc->setText(QApplication::translate("lineWidget","Arc",0));
     } //RETRANSLATE UI
 };
 
