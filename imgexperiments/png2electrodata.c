@@ -27,7 +27,6 @@ int main(int argc, char *argv[]) {
 	}
 
 	unsigned char *rgb_image=stbi_load(filename, &width, &height, &bpp, CHANNEL_NO);
-	printf("%dx%d\n%d\n", height, width, bpp);
 	
 	/*
 	for(int i=0; i<height*CHANNEL_NO; i++){	//should this * CHANNEL?
@@ -39,7 +38,7 @@ int main(int argc, char *argv[]) {
 	}*/
 
 	//explicit definition of height and width
-	float canvas[400][400][2] = {0};	//initialise canvas to hold (voltage, plate)
+	float canvas[50][50][2] = {0};	//initialise canvas to hold (voltage, plate)
 	float max = 1000;	//this value must come from Tom
 	
 	/*DESCRIPTION:
@@ -54,7 +53,7 @@ int main(int argc, char *argv[]) {
 	*/
 	
 	//CODE the above relationships:
-	for (int i = 0; i < height; i++) {	//*CHANNEL?
+	for (int i = 0; i < height*CHANNEL_NO; i+=3) {	//*CHANNEL?
 		for (int j = 0; j < (width*CHANNEL_NO); j = j + 3){ //move in 3 since RGB
 			
 			float redvalue, greenvalue, bluevalue = 0;
@@ -65,20 +64,20 @@ int main(int argc, char *argv[]) {
 			bluevalue = (*(rgb_image + i*width + j + 2));	// Blue (for white)
 			
 			if (bluevalue == 255) { //check if white 
-				canvas[i][j/3][1] = 0;	//undefined, empty space
+				canvas[i/3][j/3][1] = 0;	//undefined, empty space
 				//printf("WHITE\n");
 				
 			} else {
-				canvas[i][j/3][1] = 1;	//if not white => defined
+				canvas[i/3][j/3][1] = 1;	//if not white => defined
 				
 				if (redvalue != 0) { //check if red
-				canvas[i][j/3][0] = redvalue * max / 255;	//positive V
+				canvas[i/3][j/3][0] = redvalue * max / 255;	//positive V
 				
 				} else if (greenvalue != 0) { //check if green 
-					canvas[i][j/3][0] = - greenvalue * max / 255; //negative V
+					canvas[i/3][j/3][0] = - greenvalue * max / 255; //negative V
 				
 				} else { //has to be black
-					canvas[i][j/3][0] = 0;	//0 V
+					canvas[i/3][j/3][0] = 0;	//0 V
 					//printf("BLACK\n");
 				}
 			}
@@ -88,7 +87,7 @@ int main(int argc, char *argv[]) {
 	//print test 
 	for(int i=0; i<height; i++){	
 		for(int j=0; j<width; j++){
-			printf("%f+%f ",canvas[i][j][0],canvas[i][j][1]);
+			printf("%4f ",canvas[i][j][0]);
 		}
 
 		printf("\n");
