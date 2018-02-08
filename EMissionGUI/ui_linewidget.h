@@ -2,7 +2,6 @@
 #define UI_LINEWIDGET_H
 
 
-
 #include <QtCore/QVariant>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
@@ -11,22 +10,36 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QVBoxLayout>
 #include <QWidget>
+#include <QDialog>
 
 QT_BEGIN_NAMESPACE
 
 class Ui_lineWidget{
 public:
+    //DEFINE WIDGET POINTERS (GUI SPACE)
     QWidget *widget;
     QWidget *widgetSave;
     QWidget *widgetClear;
+    QWidget *widgetVoltage;
+    QWidget *widgetMaxVoltage;
+    QDialog *widgetDialogue;
     QVBoxLayout *verticalLayout;
 
     //POINTERS TO SHAPES HERE
     QPushButton *btnLine;
     QPushButton *btnRect;
     QPushButton *btnArc;
+
+    //POINTERS TO OTHER BUTTONS
     QPushButton *btnSave;
     QPushButton *btnClear;
+
+    //POINTER TO Voltage BUTTON
+    QPushButton *btnVoltage;
+    QPushButton *btnMaxVoltage;
+
+
+
 
     void setupUi(QWidget *lineWidget){
         if (lineWidget->objectName().isEmpty())
@@ -36,13 +49,19 @@ public:
 
         widget = new QWidget(lineWidget);
         widget->setObjectName(QStringLiteral("widget"));
-        widget->setGeometry(QRect(410, 10, 100, 100));
+        widget->setGeometry(QRect(410, 200, 100, 100));
 
         widgetClear= new QWidget(lineWidget);
         widgetClear->setObjectName(QStringLiteral("widgetClear"));
-        widgetClear->setGeometry(QRect(410, 300, 100, 100));
+        widgetClear->setGeometry(QRect(410, 320, 100, 100));
 
+        widgetVoltage= new QWidget(lineWidget);
+        widgetVoltage->setObjectName(QStringLiteral("widgetVoltage"));
+        widgetVoltage->setGeometry(QRect(610, 10, 100, 100));
 
+        widgetMaxVoltage= new QWidget(lineWidget);
+        widgetMaxVoltage->setObjectName(QStringLiteral("widgetVoltage"));
+        widgetMaxVoltage->setGeometry(QRect(410, 10, 200, 100));
 
         widgetSave = new QWidget(lineWidget);
         widgetSave->setObjectName(QStringLiteral("widgetSave"));
@@ -75,13 +94,20 @@ public:
         btnClear = new QPushButton(widgetClear);
         btnClear->setObjectName(QStringLiteral("btnClear"));
 
+        btnVoltage = new QPushButton(widgetVoltage);
+        btnVoltage->setObjectName(QStringLiteral("btnVoltage"));
+
+        btnMaxVoltage = new QPushButton(widgetMaxVoltage);
+        btnMaxVoltage->setObjectName(QStringLiteral("btnMaxVoltage"));
+
+
         retranslateUi(lineWidget);
 
         QMetaObject::connectSlotsByName(lineWidget);
     }//Interface Setup.
 
 
-    /* This names all the buttonws*/
+    /* This names all the buttons*/
     void retranslateUi(QWidget *lineWidget){
         lineWidget->setWindowTitle(QApplication::translate("lineWidget","EMission GUI",0));
         btnLine->setText(QApplication::translate("lineWidget","Line",0));
@@ -89,6 +115,8 @@ public:
         btnSave->setText(QApplication::translate("lineWidget","Save",0));
         btnClear->setText(QApplication::translate("lineWidget","Clear",0));
         btnArc->setText(QApplication::translate("lineWidget","Arc",0));
+        btnVoltage->setText(QApplication::translate("lineWidget","set Voltage",0));
+        btnMaxVoltage->setText(QApplication::translate("lineWidget","set MaxVoltage",0));
     } //RETRANSLATE UI
 };
 

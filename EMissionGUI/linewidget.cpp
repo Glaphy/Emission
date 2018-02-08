@@ -1,8 +1,12 @@
 #include "linewidget.h"
 #include "ui_linewidget.h"
 
+#include <cmath>
 #include <QMouseEvent>
+#include <QInputDialog>
 #include <QPainter>
+#define COLOUR 0
+
 
 
 lineWidget::lineWidget(QWidget *parent) :
@@ -17,7 +21,11 @@ lineWidget::lineWidget(QWidget *parent) :
     drawStarted = false;
     //default is line
     SelectedTool = 2;
+    NegVolts = 0;
+    PosVolts=0;
+    MaxVolts=5000;
 }
+
 
 
 void lineWidget::mousePressEvent(QMouseEvent* event){
@@ -96,13 +104,16 @@ void lineWidget::paintEvent(QPaintEvent *event){
         // with the newly modified QPixmap object
         QPainter tempPainter(&mPix);
 
-        if(SelectedTool == 1){
+        tempPainter.setPen(QPen(QColor(PosVolts,NegVolts,0)));
+        tempPainter.setBrush(QBrush(QColor(PosVolts,NegVolts,0)));
 
-            tempPainter.drawRect(mRect);}
-        else if(SelectedTool == 2)
+        if(SelectedTool == 1){
+            tempPainter.drawRect(mRect);
+        }
+        else if(SelectedTool == 2){
             tempPainter.drawLine(mLine);
-        else if(SelectedTool == 3){
-            tempPainter.setBrush(QBrush(Qt::red));
+        }
+        else if(SelectedTool == 3){ 
             tempPainter.drawEllipse(mArc);}
         else if (SelectedTool == 4)
             //tempPainter.fillRect(mArc,Qt::black);
@@ -110,7 +121,7 @@ void lineWidget::paintEvent(QPaintEvent *event){
 
             mPix.fill(Qt::white);
 
-        painter.drawPixmap(0,0,mPix);
+           painter.drawPixmap(0,0,mPix);
     }
     painter.end();
 
@@ -122,7 +133,42 @@ lineWidget::~lineWidget()
     delete ui;
 }
 
+
+
+
+
+
 //Here we define what the button handles do.
+
+void lineWidget::on_btnVoltage_clicked(){
+    //! [0]
+        bool ok;
+        int i = QInputDialog::getInt(this, tr("Voltage Colour"),
+                                     tr("set Voltage Colour (integer):"), 0, -MaxVolts, MaxVolts, 1, &ok);
+        if (ok){
+            if (i<0){
+                NegVolts=round(((float)i*255*(-1))/MaxVolts);
+                PosVolts=0;
+            }
+            else{
+                PosVolts=round(((float)i*255)/MaxVolts);
+                NegVolts=0;
+            }
+        }
+
+    //! [0]
+}
+
+
+void lineWidget::on_btnMaxVoltage_clicked(){
+    //! [0]
+        bool ok;
+        MaxVolts = QInputDialog::getInt(this, tr("Voltage Colour"),
+                                     tr("set Voltage Colour (integer):"), 0, -500000, 500000, 1, &ok);
+    //! [0]
+}
+
+
 void lineWidget::on_btnLine_clicked(){
         SelectedTool = 2;
 }
@@ -140,9 +186,9 @@ void lineWidget::on_btnArc_clicked()
 
 void lineWidget::on_btnSave_clicked()
 {
-    QFile file("datpic.bmp");
+    QFile file("datpic.png");
     //file.open(QIODevice::WriteOnly);
-    mPix.save(&file,"BMP",-1);
+    mPix.save(&file,"PNG",-1);
     QCoreApplication::applicationFilePath();
 }
 

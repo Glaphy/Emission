@@ -35,6 +35,10 @@ public:
     bool mousePressed;
     bool drawStarted;
     int SelectedTool;
+    int PosVolts;
+    int NegVolts;
+    int MaxVolts;
+
     //destructor is needed when we construct a object on the heap
     //instead of stack for efficient memory management
     ~lineWidget();
@@ -49,8 +53,14 @@ private slots:
     void on_btnLine_clicked();
     void on_btnRect_clicked();
     void on_btnArc_clicked();
+
     void on_btnSave_clicked();
     void on_btnClear_clicked();
+
+    void on_btnVoltage_clicked();
+    void on_btnMaxVoltage_clicked();
+
+
 
 private:
     //we declare a linewidget pointer object using namespace identifier;
@@ -61,6 +71,8 @@ private:
     QLine mLine;
     QRect mRect;
     QRect mArc;
+
+
 };
 
 
