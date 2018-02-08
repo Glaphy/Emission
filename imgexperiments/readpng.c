@@ -1,8 +1,10 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #define STB_IMAGE_IMPLEMENTATION
+#define STBI_ONLY_PNG
 #include "stb_image.h"
 
 #define CHANNEL_NO 3
@@ -20,7 +22,7 @@ int main(int argc, char *argv[]) {
 	strcpy(filename, argv[1]);
 	
 	if(fopen(filename, "r")==NULL){
-		printf("Failed to open %s. Please check the file and try\ 
+		printf("Failed to open %s. Please check the file and try\
  again\n.", filename);
 		exit(2);
 	}
