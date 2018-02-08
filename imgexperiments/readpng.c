@@ -5,6 +5,8 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
+#define CHANNEL_NO 3
+
 int main(int argc, char *argv[]) {
 	int width, height, bpp;
 	char filename[25]="";
@@ -23,10 +25,11 @@ int main(int argc, char *argv[]) {
 		exit(2);
 	}
 
-	unsigned char *rgb_image=stbi_load(filename, &width, &height, &bpp, 1);
+	unsigned char *rgb_image=stbi_load(filename, &width, &height, &bpp, CHANNEL_NO);
+	printf("%dx%d\n%d\n", height, width, bpp);
     
-	for(int i=0; i<height; i++){
-		for(int j=0; j<width; j++){
+	for(int i=0; i<height*CHANNEL_NO; i++){
+		for(int j=0; j<width*CHANNEL_NO; j++){
 			printf("%3d ", *(rgb_image+i*width+j));
 		}
 
