@@ -7,7 +7,6 @@ v=[];
 
 for i=1:rows
 	for j=1:cols
-		v=[v A(i,j)];
+		v=[v; A(i,j)];
 	end
 end
-		

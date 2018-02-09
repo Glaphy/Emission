@@ -12,6 +12,7 @@
 int main(int argc, char *argv[]) {
 	int width, height, bpp;
 	char filename[25]="";
+	FILE *chargefile, *geometryfile;
 
 	if(argc!=2){
 		puts("Please use the following syntax:");
@@ -28,15 +29,6 @@ int main(int argc, char *argv[]) {
 
 	unsigned char *rgb_image=stbi_load(filename, &width, &height, &bpp, CHANNEL_NO);
 	
-	/*
-	for(int i=0; i<height*CHANNEL_NO; i++){	//should this * CHANNEL?
-		for(int j=0; j<width*CHANNEL_NO; j++){
-			printf("%3d ", *(rgb_image+i*width+j));
-		}
-
-		printf("\n");
-	}*/
-
 	//explicit definition of height and width
 	float canvas[50][50][2] = {0};	//initialise canvas to hold (voltage, plate)
 	float max = 1000;	//this value must come from Tom
@@ -53,7 +45,7 @@ int main(int argc, char *argv[]) {
 	*/
 	
 	//CODE the above relationships:
-	for (int i = 0; i < height*CHANNEL_NO; i+=3) {	//*CHANNEL?
+	for (int i = 0; i < height*CHANNEL_NO; i+=3){
 		for (int j = 0; j < (width*CHANNEL_NO); j = j + 3){ //move in 3 since RGB
 			
 			float redvalue, greenvalue, bluevalue = 0;
@@ -83,15 +75,25 @@ int main(int argc, char *argv[]) {
 			}
 		}
 	}
+
+	chargefile=fopen("chargefile.dat", "w");
+	geometryfile=fopen("geometryfile.dat", "w");
 	
 	//print test 
 	for(int i=0; i<height; i++){	
 		for(int j=0; j<width; j++){
-			printf("%4f ",canvas[i][j][0]);
+			fprintf(chargefile, "%4f ", canvas[i][j][0]);
+			fprintf(geometryfile, "%1f ", canvas[i][j][1]);
+
 		}
 
-		printf("\n");
+		fprintf(chargefile, "\n");
+		fprintf(geometryfile, "\n");
 	}
+
+	fclose(chargefile);
+	fclose(geometryfile);
+
 	
 	return 0;
 }

@@ -1,5 +1,7 @@
 function A=tridiag(N)
+
 A=zeros(N^2, N^2);
+
 for i=[1:N^2]
 	A(i,i) = -4;
 	if (mod(i-1,N) ~= 0)
