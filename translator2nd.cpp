@@ -198,7 +198,7 @@ int main(int argc, char *argv[]) {
 	}
 	else if(y==2){
 	  //Boundary (2)
-	  double M_1xa,M_2xa,M_0xa,M_1xb,M_2xb,M_0xb,M_1ya,M_2ya,M_0ya,M_1yb,M_2yb,M_0yb;
+	  double M_1xa,M_2xa,M_0xa,M_1xb,M_2xb,M_0xb;
 	  M_2xa=uplus[(xmin+3)][i]-uplus[(xmin+2)][i];
 	  if(round(M_2xa)!=0){
 	    M_1xa=uplus[(xmin+2)][i]-uplus[(xmin+1)][i];
@@ -207,19 +207,21 @@ int main(int argc, char *argv[]) {
 	  }
 	  
 	  
-	  /*M_2xb=uplus[(ymax-3)][i]-uplus[(ymax-2)][i];
+	  M_2xb=uplus[(ymax-3)][i]-uplus[(ymax-2)][i];
 	  if(round(M_2xb)!=0){
 	    M_1xb=uplus[(ymax-2)][i]-uplus[(ymax-1)][i];
 	    M_0xb=(M_1xb*M_1xb)/round(M_2xb);
 	    uplus[ymax][i]=uplus[(ymax-1)][i]-M_0xb;
 	  }
-	  	  
+	}
+	else if(y==2){
+	  double M_1ya,M_2ya,M_0ya,M_1yb,M_2yb,M_0yb;	  
 	  M_2ya=uplus[j][(xmin+3)]-uplus[j][(xmin+2)];
 	  if(round(M_2ya)!=0){
 	    M_1ya=uplus[j][(xmin+2)]-uplus[j][(xmin+1)];
 	    M_0ya=(M_1ya*M_1ya)/round(M_2ya);
 	    uplus[j][xmin]=uplus[j][(xmin+1)]-M_0ya;
-	    }*/
+	  }
 	  
 	  M_2yb=uplus[j][(xmax-3)]-uplus[j][(xmax-2)];
 	  if(round(M_2yb)!=0){
