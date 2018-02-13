@@ -92,7 +92,7 @@ int main(int argc, char *argv[]) {
   //********//INITIATING VARIABLES//*********//
   
   double t=0; //time zero
-  double tmax=400;
+  double tmax=1000;//400;
   double error=0;
   double tolerance=50;
   double dt=0.1;
@@ -158,10 +158,10 @@ int main(int argc, char *argv[]) {
     }
   }
   
-  
+  int counter=0;  
   
 //********//METHOD//*********//
-  
+
   //Looping through time
   while (tmax >= t){
     error=0;
@@ -181,7 +181,7 @@ int main(int argc, char *argv[]) {
 	    uplus[j][i]=canvas[(j-shifty)][(i-shiftx)][0];
 	  }
 	}
-	
+
 	//Boundaries//
 	if(y==1){
 	  //Boundaries(1)
@@ -194,7 +194,6 @@ int main(int argc, char *argv[]) {
 	  uplus[j][xmin]=uplus[j][(xmin+1)]-M_1;
 	  M_1=(uplus[j][(xmax-2)]-uplus[j][(xmax-1)]);
 	  uplus[j][xmax]=uplus[j][(xmax-1)]-M_1;
-	  cout << uplus[j][xmin] << " " << uplus[j][xmax]<< " " <<M_1<<endl;
 	}
 	else if(y==2){
 	  //Boundary (2)
@@ -206,16 +205,13 @@ int main(int argc, char *argv[]) {
 	    uplus[xmin][i]=uplus[(xmin+1)][i]-M_0xa;
 	  }
 	  
-	  
 	  M_2xb=uplus[(ymax-3)][i]-uplus[(ymax-2)][i];
 	  if(round(M_2xb)!=0){
 	    M_1xb=uplus[(ymax-2)][i]-uplus[(ymax-1)][i];
 	    M_0xb=(M_1xb*M_1xb)/round(M_2xb);
 	    uplus[ymax][i]=uplus[(ymax-1)][i]-M_0xb;
 	  }
-	}
-	else if(y==2){
-	  double M_1ya,M_2ya,M_0ya,M_1yb,M_2yb,M_0yb;	  
+	  /*  double M_1ya,M_2ya,M_0ya,M_1yb,M_2yb,M_0yb;	  
 	  M_2ya=uplus[j][(xmin+3)]-uplus[j][(xmin+2)];
 	  if(round(M_2ya)!=0){
 	    M_1ya=uplus[j][(xmin+2)]-uplus[j][(xmin+1)];
@@ -228,15 +224,31 @@ int main(int argc, char *argv[]) {
 	    M_1yb=uplus[j][(xmax-2)]-uplus[j][(xmax-1)];
 	    M_0yb=(M_1yb*M_1yb)/round(M_2yb);
 	    uplus[j][xmax]=uplus[j][(xmax-1)]-M_0yb;
-	  }
+	    }*/
 	}
 
 	//error
 	error=error+abs(uplus[j][i]-u[j][i]);
 	
       }
+      if(y==2){
+	double M_1ya,M_2ya,M_0ya,M_1yb,M_2yb,M_0yb;
+	M_2ya=uplus[j][(xmin+3)]-uplus[j][(xmin+2)];
+	if(round(M_2ya)!=0){
+	  M_1ya=uplus[j][(xmin+2)]-uplus[j][(xmin+1)];
+	  M_0ya=(M_1ya*M_1ya)/round(M_2ya);
+	  uplus[j][xmin]=uplus[j][(xmin+1)]-M_0ya;
+	}
+	
+	M_2yb=uplus[j][(xmax-3)]-uplus[j][(xmax-2)];
+	if(round(M_2yb)!=0){
+	  M_1yb=uplus[j][(xmax-2)]-uplus[j][(xmax-1)];
+	  M_0yb=(M_1yb*M_1yb)/round(M_2yb);
+	  uplus[j][xmax]=uplus[j][(xmax-1)]-M_0yb;
+	}
+      }
     }
-    
+
     //ERROR CONTROL    
     if (error < tolerance ){
       cout << "Error tolerance reached: " << error << endl;
