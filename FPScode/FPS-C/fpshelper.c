@@ -21,16 +21,16 @@ void genSparseFile(int* A, int N){
 	}
 }
 
-void vseek(int* A, int colsA, float* b, int sizeb){
-	int L=sizeb;
+void vseek(int* A, float* b, int N){
+	int Nsquare=N*N;
 
-	for(int i=0; i<L; i++){
+	for(int i=0; i<Nsquare; i++){
 		if(b[i]!=0){
-			for(int j=0; j<colsA; j++){
-				*(A+i*colsA+j)=0;
+			for(int j=0; j<Nsquare; j++){
+				*(A+i*Nsquare+j)=0;
 			}
 
-			*(A+i*colsA+i)=1;
+			*(A+i*Nsquare+i)=1;
 		}
 	}
 }

@@ -7,6 +7,6 @@
 #define INPUT_FAILURE 1
 
 void genSparseFile(int* A, int N);
-void vseek(int* A, int colsA, float* b, int sizeb);
+void vseek(int* A, float* b, int N);
 
 #endif /*FPSTAR_H*/

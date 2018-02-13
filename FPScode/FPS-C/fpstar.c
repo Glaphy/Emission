@@ -16,7 +16,7 @@ int main(int argc, char** argv){
 	}
 
 	genSparseFile(*A, N);
-	vseek(*A, Nsquare, b, Nsquare);
+	vseek(*A, b, N);
 
 	for(int i=0; i<Nsquare; i++){
 		for(int j=0; j<Nsquare; j++){
