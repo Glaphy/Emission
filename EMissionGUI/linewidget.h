@@ -39,6 +39,10 @@ public:
     int NegVolts;
     int MaxVolts;
 
+    // shapes and variables for GUI corrector.
+    int Refresh;
+
+
     //destructor is needed when we construct a object on the heap
     //instead of stack for efficient memory management
     ~lineWidget();
@@ -70,7 +74,13 @@ private:
 
     QLine mLine;
     QRect mRect;
+    QRect mRectCorrect;
     QRect mArc;
+
+    // correction shapes.
+    QRect offRect;
+    QRect offArc;
+    QRect offline;
 
 
 };

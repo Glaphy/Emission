@@ -5,6 +5,11 @@
 #include <QMouseEvent>
 #include <QInputDialog>
 #include <QPainter>
+#include <QPixmap>
+#include <QPixmapCache>
+
+#include <QPoint>
+
 #define COLOUR 0
 
 
@@ -15,15 +20,27 @@ lineWidget::lineWidget(QWidget *parent) :
     ui->setupUi(this);
     mPix = QPixmap(400,400);
     mPix.fill(Qt::white);
+    //mPix.load("datdrawing.png");
 
-    //set everything to false as nothing has started yet
+
     mousePressed = false;
     drawStarted = false;
     //default is line
     SelectedTool = 2;
+    //Colouring variables
     NegVolts = 0;
     PosVolts=0;
     MaxVolts=5000;
+
+    //correction variable and shapes.
+    Refresh=0;
+
+    QPoint p(500,500);
+    QPoint q(550,550);
+
+    offRect.setTopLeft(p);
+    offRect.setBottomLeft(q);
+
 }
 
 
@@ -37,7 +54,7 @@ void lineWidget::mousePressEvent(QMouseEvent* event){
         mRect.setTopLeft(event->pos());
         mRect.setBottomRight(event->pos());
     }
-    else if (SelectedTool == 2){
+    else if (SelectedTool == 2 ){
         mLine.setP1(event->pos());
         mLine.setP2(event->pos());
     }
@@ -64,9 +81,10 @@ void lineWidget::mouseMoveEvent(QMouseEvent* event){
         else if (SelectedTool == 3){
             mArc.setBottomRight(event->pos());
         }
+
     }
 
-    //it calls the paintEven() function continuously
+    //it calls the paintEvent() function continuously
     update();
 }
 
@@ -76,10 +94,17 @@ void lineWidget::mouseReleaseEvent(QMouseEvent *event){
     //When mouse is released update for the one last time
     mousePressed = false;
     update();
+    Refresh=Refresh+1;
+    //update();
+    //Refresh= Refresh+1;
 }
 
 
 void lineWidget::paintEvent(QPaintEvent *event){
+
+    //mPix.load("datdrawing.png");
+
+
 
     painter.begin(this);
     //When the mouse is pressed
@@ -89,15 +114,20 @@ void lineWidget::paintEvent(QPaintEvent *event){
         //hence the painter view has a feeling of dynamic drawing
         painter.drawPixmap(0,0,mPix);
 
-        if(SelectedTool == 1)
-            painter.drawRect(mRect);
-        else if(SelectedTool == 2)
-            painter.drawLine(mLine);
 
+        if(SelectedTool == 1){
+            painter.drawRect(mRect);
+        }
+        else if(SelectedTool == 2){
+            painter.drawLine(mLine);
+        }
+        else if(SelectedTool == 3){
+            painter.drawEllipse(mArc);
+        }
 
         drawStarted = true;
     }
-    else if (drawStarted){
+    else if (drawStarted && Refresh%2!=0){
         // It created a QPainter object by taking  a reference
         // to the QPixmap object created earlier, then draws a line
         // using that object, then sets the earlier painter object
@@ -108,23 +138,63 @@ void lineWidget::paintEvent(QPaintEvent *event){
         tempPainter.setBrush(QBrush(QColor(PosVolts,NegVolts,0)));
 
         if(SelectedTool == 1){
+            //int startangle = 180*16;
+            //int spanangle = 120*16;
+            //tempPainter.drawArc(mRect,startangle,spanangle);
             tempPainter.drawRect(mRect);
         }
         else if(SelectedTool == 2){
+
             tempPainter.drawLine(mLine);
         }
         else if(SelectedTool == 3){ 
-            tempPainter.drawEllipse(mArc);}
-        else if (SelectedTool == 4)
-            //tempPainter.fillRect(mArc,Qt::black);
-            //mPix = QPixmap(400,400);
-
+            tempPainter.drawEllipse(mArc);
+        }
+        else if (SelectedTool == 4){
             mPix.fill(Qt::white);
+        }
 
-           painter.drawPixmap(0,0,mPix);
+        tempPainter.setPen(QPen(Qt::black));
+        tempPainter.setBrush(QBrush(Qt::white));
+        painter.drawPixmap(0,0,mPix);
+        Refresh = Refresh + 1;
+
     }
-    painter.end();
 
+    if (drawStarted && Refresh%2==0){
+        QPainter offPainter(&mPix);
+
+        offPainter.setPen(QPen(QColor(PosVolts,NegVolts,0)));
+
+        offPainter.drawRect(offRect);
+        painter.drawPixmap(0,0,mPix);
+    }
+
+
+
+    painter.end();
+    //mousePressed = false;
+
+//    painter.begin(this);
+//    if (drawStarted && mousePressed == false){
+//        painter.drawPixmap(0,0,mPix);
+//        painter.drawRect(offRect);
+
+//    }
+//    painter.end();
+
+
+
+
+
+
+
+
+
+
+    //QFile file("datdrawing.png");
+    //mPix.save(&file,"PNG",-1);
+    //mPix.load("datdrawing.png");
 }
 
 
@@ -189,13 +259,11 @@ void lineWidget::on_btnSave_clicked()
     QFile file("datpic.png");
     //file.open(QIODevice::WriteOnly);
     mPix.save(&file,"PNG",-1);
-    QCoreApplication::applicationFilePath();
 }
 
 void lineWidget::on_btnClear_clicked()
 {
-    //mPix = QPixmap(400,400);
-    //mPix.fill(Qt::white);
 
     SelectedTool = 4;
+    update();
 }
