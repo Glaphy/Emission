@@ -171,7 +171,7 @@ int main(int argc, char *argv[]) {
       for(int i=(xmin);i<(xmax2);i=i+dx){
 	if(i > xmin && i < xmax && j > xmin && j < ymax) {
 	  //Numerical method	
-				uplus[j][i]=u[j][i]+((v*dt)/(dx*dx))*(u[(j+1)][i]-(2*u[j][i])+u[(j-1)][i]+u[j][(i+1)]-(2*u[j][i])+u[j][(i-1)]); 
+	  uplus[j][i]=u[j][i]+((v*dt)/(dx*dx))*(u[(j+1)][i]-(2*u[j][i])+u[(j-1)][i]+u[j][(i+1)]-(2*u[j][i])+u[j][(i-1)]); 
 				
 	}
 	
@@ -230,22 +230,6 @@ int main(int argc, char *argv[]) {
 	//error
 	error=error+abs(uplus[j][i]-u[j][i]);
 	
-      }
-      if(y==2){
-	double M_1ya,M_2ya,M_0ya,M_1yb,M_2yb,M_0yb;
-	M_2ya=uplus[j][(xmin+3)]-uplus[j][(xmin+2)];
-	if(round(M_2ya)!=0){
-	  M_1ya=uplus[j][(xmin+2)]-uplus[j][(xmin+1)];
-	  M_0ya=(M_1ya*M_1ya)/round(M_2ya);
-	  uplus[j][xmin]=uplus[j][(xmin+1)]-M_0ya;
-	}
-	
-	M_2yb=uplus[j][(xmax-3)]-uplus[j][(xmax-2)];
-	if(round(M_2yb)!=0){
-	  M_1yb=uplus[j][(xmax-2)]-uplus[j][(xmax-1)];
-	  M_0yb=(M_1yb*M_1yb)/round(M_2yb);
-	  uplus[j][xmax]=uplus[j][(xmax-1)]-M_0yb;
-	}
       }
     }
 
