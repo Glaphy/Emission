@@ -18,7 +18,7 @@ lineWidget::lineWidget(QWidget *parent) :
     QWidget(parent),ui(new Ui::lineWidget)
 {
     ui->setupUi(this);
-    mPix = QPixmap(400,400);
+    mPix = QPixmap(100,100);
     mPix.fill(Qt::white);
 
 

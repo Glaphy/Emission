@@ -98,10 +98,10 @@ int main(int argc, char *argv[]) {
   double dt=0.1;
   double v=1;
   int xmin=0;
-  int xmax2=71;
-  int xmax=70;
-  int ymax=70;
-  int ymax2=71;
+  int xmax2=401;
+  int xmax=400;
+  int ymax=400;
+  int ymax2=401;
   int dx=1;
   double dy=dx;
   int y;
@@ -141,8 +141,8 @@ int main(int argc, char *argv[]) {
   //centering the presented matrix
   double test[51][51];
   int shiftx, shifty;
-  shiftx=(70-50)/2;
-  shifty=(70-50)/2;
+  shiftx=0;//(70-50)/2;
+  shifty=0;//(70-50)/2;
   
   
   

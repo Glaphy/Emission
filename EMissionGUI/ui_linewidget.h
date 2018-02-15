@@ -25,6 +25,8 @@ public:
     QWidget *RadioWidget;
     QWidget *widgetSave;
     QWidget *widgetClear;
+    QWidget *widgetUpload;
+    QWidget *widgetRun;
     QWidget *widgetVoltage;
     QWidget *widgetMaxVoltage;
     QWidget *widgetLineWidth;
@@ -56,6 +58,8 @@ public:
     //POINTERS TO OTHER BUTTONS
     QPushButton *btnSave;
     QPushButton *btnClear;
+    QPushButton *btnUpload;
+    QPushButton *btnRun;
 
 
 
@@ -82,11 +86,19 @@ public:
 
         widgetClear= new QWidget(lineWidget);
         widgetClear->setObjectName(QStringLiteral("widgetClear"));
-        widgetClear->setGeometry(QRect(610, 320, 100, 100));
+        widgetClear->setGeometry(QRect(410, 320, 100, 100));
 
         widgetSave = new QWidget(lineWidget);
         widgetSave->setObjectName(QStringLiteral("widgetSave"));
-        widgetSave->setGeometry(QRect(610, 350, 100, 100));
+        widgetSave->setGeometry(QRect(410, 350, 100, 100));
+
+        widgetUpload = new QWidget(lineWidget);
+        widgetUpload->setObjectName(QStringLiteral("widgetUpload"));
+        widgetUpload->setGeometry(QRect(610, 320, 100, 100));
+
+        widgetRun = new QWidget(lineWidget);
+        widgetRun->setObjectName(QStringLiteral("widgerRun"));
+        widgetRun->setGeometry(QRect(610, 350, 100, 100));
 
         widget = new QWidget(lineWidget);
         widget->setObjectName(QStringLiteral("widget"));
@@ -152,6 +164,12 @@ public:
         btnClear = new QPushButton(widgetClear);
         btnClear->setObjectName(QStringLiteral("btnClear"));
 
+        btnUpload = new QPushButton(widgetUpload);
+        btnUpload->setObjectName(QStringLiteral("btnUpload"));
+
+        btnRun = new QPushButton(widgetRun);
+        btnRun->setObjectName(QStringLiteral("btnRun"));
+
         btnVoltage = new QPushButton(widgetVoltage);
         btnVoltage->setObjectName(QStringLiteral("btnVoltage"));
 
@@ -177,6 +195,8 @@ public:
         btnArc->setText(QApplication::translate("lineWidget","Arc",0));
         btnRect->setText(QApplication::translate("lineWidget","Rectangle",0));
         btnSave->setText(QApplication::translate("lineWidget","Save",0));
+        btnRun->setText(QApplication::translate("lineWidget","Run",0));
+        btnUpload->setText(QApplication::translate("lineWidget","Upload",0));
         btnClear->setText(QApplication::translate("lineWidget","Clear",0));
         btnEllipse->setText(QApplication::translate("lineWidget","Ellipse",0));
         btnVoltage->setText(QApplication::translate("lineWidget","set Voltage",0));
