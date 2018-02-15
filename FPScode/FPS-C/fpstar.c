@@ -28,10 +28,7 @@ int main(int argc, char** argv){
 	//Initialise array to hold canvas data i.e, charge and geometry.
 	
 	//float canvas[50][50][2] = {0};
-	//float (*canvas)[height][width][2]=malloc(sizeof(int[height][width][2]));
-	
-	
-	
+	float (*canvas)[width][2]=malloc(sizeof(int[height][width][2]));
 	//The maximum voltage the user will specify.
 	float maxV = 1000;
 
@@ -41,6 +38,26 @@ int main(int argc, char** argv){
 	png2ElectroData(height, width, maxV, rgb_image, canvas);
 	genSparseFile(*A, N);
 	vSeek(*A, b, N);
+
+	//**********************TEMPORARY*************************
+	FILE* chargefile=fopen("chargefile.dat", "w");
+	FILE *geometryfile=fopen("geometryfile.dat", "w");
+	
+	//print test 
+	for(int i=0; i<height; i++){	
+		for(int j=0; j<width; j++){
+			fprintf(chargefile, "%4f ", canvas[i][j][0]);
+			fprintf(geometryfile, "%1f ", canvas[i][j][1]);
+
+		}
+
+		fprintf(chargefile, "\n");
+		fprintf(geometryfile, "\n");
+	}
+
+	fclose(chargefile);
+	fclose(geometryfile);
+	//**********************TEMPORARY*************************
 
 	//Free loaded memory.
 	free(A);

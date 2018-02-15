@@ -35,18 +35,20 @@ void vSeek(int* A, float* b, int N){
 	}
 }
 
-/*DESCRIPTION:
-use maxV to calculate volatge from colors:
-V = colorvalue * max / 255
-
-there are 4 cases:
-RED	-->	( +V , 1 )
-GREEN 	-->	( -V , 1 )
-BLACK	-->	(  0 , 1 )
-WHITE	-->	(  0 , 0 )
-*/
 
 void png2ElectroData(int height, int width, float maxV, unsigned char *rgb_image, float canvas[height][width][2]){
+
+	/*DESCRIPTION:
+	use maxV to calculate volatge from colors:
+	V = colorvalue * max / 255
+
+	there are 4 cases:
+	RED	-->	( +V , 1 )
+	GREEN 	-->	( -V , 1 )
+	BLACK	-->	(  0 , 1 )
+	WHITE	-->	(  0 , 0 )
+	*/
+
 	for (int i = 0; i < height*CHANNEL_NO; i+=3){
 		for (int j = 0; j < (width*CHANNEL_NO); j = j + 3){ //move in 3 since RGB
 			
