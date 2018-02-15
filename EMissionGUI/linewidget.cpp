@@ -20,7 +20,6 @@ lineWidget::lineWidget(QWidget *parent) :
     ui->setupUi(this);
     mPix = QPixmap(400,400);
     mPix.fill(Qt::white);
-    //mPix.load("datdrawing.png");
 
 
     mousePressed = false;
@@ -32,8 +31,15 @@ lineWidget::lineWidget(QWidget *parent) :
     PosVolts=0;
     MaxVolts=5000;
 
+    //preset Arc angle values
+    SpanAngle = 60*16;
+    StartAngle = 150*16;
+
     //correction variable and shapes.
     Refresh=0;
+
+    //fill shape radiobutton variable
+    Fill=1;
 
     QPoint p(500,500);
     QPoint q(550,550);
@@ -59,8 +65,12 @@ void lineWidget::mousePressEvent(QMouseEvent* event){
         mLine.setP2(event->pos());
     }
     else if (SelectedTool == 3){
-        mArc.setTopLeft(event->pos());
-        mArc.setBottomRight(event->pos());
+        mEllipse.setTopLeft(event->pos());
+        mEllipse.setBottomRight(event->pos());
+    }
+    else if (SelectedTool == 4){
+        mRect.setTopLeft(event->pos());
+        mRect.setBottomRight(event->pos());
     }
 }
 
@@ -79,7 +89,10 @@ void lineWidget::mouseMoveEvent(QMouseEvent* event){
             mLine.setP2(event->pos());
         }
         else if (SelectedTool == 3){
-            mArc.setBottomRight(event->pos());
+            mEllipse.setBottomRight(event->pos());
+        }
+        else if (SelectedTool ==4){
+            mRect.setBottomRight(event->pos());
         }
 
     }
@@ -102,10 +115,6 @@ void lineWidget::mouseReleaseEvent(QMouseEvent *event){
 
 void lineWidget::paintEvent(QPaintEvent *event){
 
-    //mPix.load("datdrawing.png");
-
-
-
     painter.begin(this);
     //When the mouse is pressed
     if(mousePressed){
@@ -122,8 +131,10 @@ void lineWidget::paintEvent(QPaintEvent *event){
             painter.drawLine(mLine);
         }
         else if(SelectedTool == 3){
-            painter.drawEllipse(mArc);
+            painter.drawEllipse(mEllipse);
         }
+        else if(SelectedTool == 4)
+            painter.drawArc(mRect,StartAngle,SpanAngle);
 
         drawStarted = true;
     }
@@ -132,15 +143,27 @@ void lineWidget::paintEvent(QPaintEvent *event){
         // to the QPixmap object created earlier, then draws a line
         // using that object, then sets the earlier painter object
         // with the newly modified QPixmap object
-        QPainter tempPainter(&mPix);
 
-        tempPainter.setPen(QPen(QColor(PosVolts,NegVolts,0)));
-        tempPainter.setBrush(QBrush(QColor(PosVolts,NegVolts,0)));
+
+        //temporary painter is set with user defined fill and pen style
+        //based on buttons.
+
+        QPainter tempPainter(&mPix);
+        QPen tempPen;
+        tempPen.setWidth(Fill);
+        tempPen.setBrush(QColor(PosVolts,NegVolts,0));
+
+        if(ui->rbSetFill->isChecked()){
+            tempPainter.setBrush(QBrush(QColor(PosVolts,NegVolts,0)));
+        }
+        else{
+            tempPainter.setBrush(QBrush(QColor(255,255,255,0)));
+        }
+        tempPainter.setPen(tempPen);
+
+
 
         if(SelectedTool == 1){
-            //int startangle = 180*16;
-            //int spanangle = 120*16;
-            //tempPainter.drawArc(mRect,startangle,spanangle);
             tempPainter.drawRect(mRect);
         }
         else if(SelectedTool == 2){
@@ -148,9 +171,12 @@ void lineWidget::paintEvent(QPaintEvent *event){
             tempPainter.drawLine(mLine);
         }
         else if(SelectedTool == 3){ 
-            tempPainter.drawEllipse(mArc);
+            tempPainter.drawEllipse(mEllipse);
         }
-        else if (SelectedTool == 4){
+        else if(SelectedTool == 4){
+            tempPainter.drawArc(mRect,StartAngle,SpanAngle);
+        }
+        else if (SelectedTool == 5){
             mPix.fill(Qt::white);
         }
 
@@ -167,34 +193,8 @@ void lineWidget::paintEvent(QPaintEvent *event){
         offPainter.setPen(QPen(QColor(PosVolts,NegVolts,0)));
 
         offPainter.drawRect(offRect);
-        painter.drawPixmap(0,0,mPix);
     }
-
-
-
     painter.end();
-    //mousePressed = false;
-
-//    painter.begin(this);
-//    if (drawStarted && mousePressed == false){
-//        painter.drawPixmap(0,0,mPix);
-//        painter.drawRect(offRect);
-
-//    }
-//    painter.end();
-
-
-
-
-
-
-
-
-
-
-    //QFile file("datdrawing.png");
-    //mPix.save(&file,"PNG",-1);
-    //mPix.load("datdrawing.png");
 }
 
 
@@ -238,9 +238,37 @@ void lineWidget::on_btnMaxVoltage_clicked(){
     //! [0]
 }
 
+void lineWidget::on_btnLineWidth_clicked(){
+    //! [0]
+        bool ok;
+        int i = QInputDialog::getInt(this, tr("Line Width in Pixels"),
+                                     tr("set Line width (and Shape outline):"),1, 0, 100000, 1, &ok);
+        if (ok){
+            Fill=i;
+        }
+    //! [0]
+}
 
-void lineWidget::on_btnLine_clicked(){
-        SelectedTool = 2;
+void lineWidget::on_btnArcStart_clicked(){
+    //! [0]
+        bool ok;
+        int i = QInputDialog::getInt(this, tr("Set initial Arc Angle"),
+                                     tr("Angle (degrees):"), StartAngle, 0, 360, 1, &ok);
+        if (ok){
+            StartAngle=i*16;
+            }
+    //! [0]
+}
+
+void lineWidget::on_btnArcSpan_clicked(){
+    //! [0]
+        bool ok;
+        int i = QInputDialog::getInt(this, tr("Set Arc Span Angle over area drawn"),
+                                     tr("Angle (degrees):"), SpanAngle, 0, 360, 1, &ok);
+        if (ok){
+            SpanAngle=i*16;
+            }
+    //! [0]
 }
 
 void lineWidget::on_btnRect_clicked()
@@ -248,22 +276,30 @@ void lineWidget::on_btnRect_clicked()
     SelectedTool = 1;
 }
 
-void lineWidget::on_btnArc_clicked()
-{
-    SelectedTool = 3;
-    //void QPainter::drawArc(100,199,59,39,79,78)
+void lineWidget::on_btnLine_clicked(){
+    SelectedTool = 2;
 }
 
-void lineWidget::on_btnSave_clicked()
+void lineWidget::on_btnEllipse_clicked()
 {
-    QFile file("datpic.png");
-    //file.open(QIODevice::WriteOnly);
-    mPix.save(&file,"PNG",-1);
+    SelectedTool = 3;
+}
+
+void lineWidget::on_btnArc_clicked()
+{
+    SelectedTool = 4;
 }
 
 void lineWidget::on_btnClear_clicked()
 {
 
-    SelectedTool = 4;
+    SelectedTool = 5;
+    mPix.fill(Qt::white);
     update();
+}
+
+void lineWidget::on_btnSave_clicked()
+{
+    QFile file("datpic.png");
+    mPix.save(&file,"PNG",-1);
 }

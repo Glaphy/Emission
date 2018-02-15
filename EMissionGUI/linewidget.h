@@ -1,16 +1,13 @@
 #ifndef LINEWIDGET_H
 #define LINEWIDGET_H
 
+#include "ui_linewidget.h"
+
 #pragma once
 
 #include <QPainter>
 #include <QWidget>
 
-
-
-/*
-done
-*/
 
 
 
@@ -23,7 +20,6 @@ namespace Ui {
 class lineWidget: public QWidget{
 
     Q_OBJECT
-
 public:
     //the constructor is marked explicit so that we don't get any
     // implicit conversion by passing the wrong parameter
@@ -35,9 +31,14 @@ public:
     bool mousePressed;
     bool drawStarted;
     int SelectedTool;
+
+    int SpanAngle;
+    int StartAngle;
+
     int PosVolts;
     int NegVolts;
     int MaxVolts;
+    int Fill;
 
     // shapes and variables for GUI corrector.
     int Refresh;
@@ -56,13 +57,20 @@ protected:
 private slots:
     void on_btnLine_clicked();
     void on_btnRect_clicked();
+    void on_btnEllipse_clicked();
+
+    void on_btnArcStart_clicked();
+    void on_btnArcSpan_clicked();
     void on_btnArc_clicked();
+
 
     void on_btnSave_clicked();
     void on_btnClear_clicked();
 
     void on_btnVoltage_clicked();
     void on_btnMaxVoltage_clicked();
+
+    void on_btnLineWidth_clicked();
 
 
 
@@ -75,11 +83,11 @@ private:
     QLine mLine;
     QRect mRect;
     QRect mRectCorrect;
-    QRect mArc;
+    QRect mEllipse;
 
     // correction shapes.
     QRect offRect;
-    QRect offArc;
+    QRect offEllipse;
     QRect offline;
 
 
