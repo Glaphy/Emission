@@ -21,7 +21,7 @@ void genSparseFile(int* A, int N){
 	}
 }
 
-void vseek(int* A, float* b, int N){
+void vSeek(int* A, float* b, int N){
 	int Nsquare=N*N;
 
 	for(int i=0; i<Nsquare; i++){

@@ -15,7 +15,7 @@ int main(int argc, char** argv){
 	strcpy(filename, argv[1]);
 
 	if(fopen(filename, "r")==NULL){
-		printf("Failed to open %s. Please check the file and try again\n.", filename);
+		printf("Failed to open %s. Please check the file and try again.\n", filename);
 		exit(2);
 	}
 
@@ -26,7 +26,12 @@ int main(int argc, char** argv){
 	int (*A)[Nsquare]=malloc(sizeof(int[Nsquare][Nsquare]));
 	float *b=calloc(Nsquare, sizeof(float));
 	//Initialise array to hold canvas data i.e, charge and geometry.
-	float canvas[50][50][2] = {0};
+	
+	//float canvas[50][50][2] = {0};
+	//float (*canvas)[height][width][2]=malloc(sizeof(int[height][width][2]));
+	
+	
+	
 	//The maximum voltage the user will specify.
 	float maxV = 1000;
 
@@ -35,7 +40,7 @@ int main(int argc, char** argv){
 	//account for known voltages.
 	png2ElectroData(height, width, maxV, rgb_image, canvas);
 	genSparseFile(*A, N);
-	vseek(*A, b, N);
+	vSeek(*A, b, N);
 
 	//Free loaded memory.
 	free(A);

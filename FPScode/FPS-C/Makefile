@@ -2,7 +2,7 @@ CC=gcc
 CFLAGS=-Wall --std=c99
 LDFLAGS=-lm
 OBJ=fpstar.o fpshelper.o
-EXE=fpstar
+EXE=fpstar.out
 DBGFLAGS=-g
 
 all: $(EXE)
@@ -19,7 +19,7 @@ $(EXE): $(OBJ)
 .PHONY: clean uncluttered
 
 clean:
-	rm fpstar
+	rm fpstar.out
 	rm *.o
 
 uncluttered:
