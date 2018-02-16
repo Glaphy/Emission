@@ -26,23 +26,33 @@ int main(int argc, char** argv){
 	int (*A)[Nsquare]=malloc(sizeof(int[Nsquare][Nsquare]));
 	float *b=calloc(Nsquare, sizeof(float));
 	//Initialise array to hold canvas data i.e, charge and geometry.
-	
+
 	//float canvas[50][50][2] = {0};
-	float (*canvas)[width][2]=malloc(sizeof(int[height][width][2]));
+	float (*canvas)[width][2]=malloc(sizeof(float[height][width][2]));
 	//The maximum voltage the user will specify.
 	float maxV = 1000;
 
 	//These three function convert the PNG into raw numerical data, fill
 	//the canvas, generate A, and edit the appropriate rows of A to
 	//account for known voltages.
+
+	FILE* sparseTripletFile=fopen("sparsematrix.dat", "w+");
+
+	if(!sparseTripletFile){
+		printf("Failed to generate sparse data file!\n");
+		exit(3);
+	}
+
 	png2ElectroData(height, width, maxV, rgb_image, canvas);
-	genSparseFile(*A, N);
+	genSparseFile(sparseTripletFile, N);
 	vSeek(*A, b, N);
+
+	fclose(sparseTripletFile);
 
 	//**********************TEMPORARY*************************
 	FILE* chargefile=fopen("chargefile.dat", "w");
 	FILE *geometryfile=fopen("geometryfile.dat", "w");
-	
+
 	//print test 
 	for(int i=0; i<height; i++){	
 		for(int j=0; j<width; j++){

@@ -12,7 +12,7 @@
 
 
 void png2ElectroData(int height, int width, float maxV, unsigned char *rgb_image, float canvas[height][width][2]);
-void genSparseFile(int* A, int N);
+void genSparseFile(FILE* sparseTripletFile, int N);
 void vSeek(int* A, float* b, int N);
 
 #endif /*FPSTAR_H*/
