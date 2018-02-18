@@ -45,7 +45,7 @@ int main(int argc, char** argv){
 
 	png2ElectroData(height, width, maxV, rgb_image, canvas);
 	genSparseFile(sparseTripletFile, N);
-	vSeek(*A, b, N);
+	vSeek(sparseTripletFile, b, N);
 
 	fclose(sparseTripletFile);
 

@@ -19,19 +19,27 @@ void genSparseFile(FILE* sparseTripletFile, int N){
 			fprintf(sparseTripletFile, "%d %d 1\n", i, i+N);
 		}
 	}
+
+	fprintf(sparseTripletFile, ".");
 }
 
-void vSeek(int* A, float* b, int N){
+void vSeek(FILE* sparseTripletFile, float* b, int N){
 	int Nsquare=N*N;
+	char dataLine[256];
+	fseek(sparseTripletFile, 0, SEEK_SET);
 
-	for(int i=0; i<Nsquare; i++){
-		if(b[i]!=0){
-			for(int j=0; j<Nsquare; j++){
-				*(A+i*Nsquare+j)=0;
+	while(fgets(dataLine, sizeof(dataLine), sparseTripletFile)!=NULL){
+		//printf("%s", dataLine);
+
+		/*for(int i=0; i<Nsquare; i++){
+			if(b[i]!=0){
+				for(int j=0; j<Nsquare; j++){
+					*(A+i*Nsquare+j)=0;
+				}
+
+				*(A+i*Nsquare+i)=1;
 			}
-
-			*(A+i*Nsquare+i)=1;
-		}
+		}*/
 	}
 }
 
