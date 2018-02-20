@@ -6,7 +6,7 @@ using namespace std;
 int maxVolt;
 char png_name[]="datpic.png";
 bool inf = false;
-double errtol = 0.0000001;
+double errtol = 10;
 
 
 
@@ -21,9 +21,10 @@ int main(int argc, char *argv[])
 
     a.exec();
 
+    cout << inf << endl;
+    cout << errtol << endl;
 
-
-    trivialMatrix(png_name,0.1,inf,maxVolt);
+    trivialMatrix(png_name,errtol,inf,maxVolt);
 
     EasyPlotting();
 

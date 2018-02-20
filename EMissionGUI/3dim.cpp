@@ -194,6 +194,7 @@ if(infinite) {
 
 while (tmax >= t){
 	error=0;
+        total=0;
 	
 	//staggered leapfrog ~ iterating through grid
 	for(int j=xmin; j<ymax2; j++){
