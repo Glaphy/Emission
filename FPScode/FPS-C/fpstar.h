@@ -10,9 +10,7 @@
 #include <stdint.h>
 #include <string.h>
 
-
-void png2ElectroData(int height, int width, float maxV, unsigned char *rgb_image, float canvas[height][width][2]);
-void genSparseFile(FILE* sparseTripletFile, int N);
-void vSeek(FILE* sparseTripletFile, float* b, int N);
+void png2ElectroData(int height, int width, unsigned char *rgb_image, float canvas[height][width][2], float maxV);
+void genSparseFile(FILE* sparseTripletFile, int height, int width, float canvas[height][width][2], int N);
 
 #endif /*FPSTAR_H*/

@@ -22,19 +22,16 @@ int main(int argc, char** argv){
 	//Load the PNG into memory.
 	unsigned char *rgb_image=stbi_load(filename, &width, &height, &bpp, CHANNEL_NO);
 	int N=height, Nsquare=N*N;
+	
 	//Dynamically Allocate space for the A and b matrices.
 	int (*A)[Nsquare]=malloc(sizeof(int[Nsquare][Nsquare]));
 	float *b=calloc(Nsquare, sizeof(float));
-	//Initialise array to hold canvas data i.e, charge and geometry.
 
-	//float canvas[50][50][2] = {0};
+	//Initialise array to hold canvas data i.e, charge and geometry.
 	float (*canvas)[width][2]=malloc(sizeof(float[height][width][2]));
+
 	//The maximum voltage the user will specify.
 	float maxV = 1000;
-
-	//These three function convert the PNG into raw numerical data, fill
-	//the canvas, generate A, and edit the appropriate rows of A to
-	//account for known voltages.
 
 	FILE* sparseTripletFile=fopen("sparsematrix.dat", "w+");
 
@@ -43,9 +40,12 @@ int main(int argc, char** argv){
 		exit(3);
 	}
 
-	png2ElectroData(height, width, maxV, rgb_image, canvas);
-	genSparseFile(sparseTripletFile, N);
-	vSeek(sparseTripletFile, b, N);
+
+	//These two functions convert the PNG into voltages based on colours
+	//used, fill the canvas, and generate A in sparse triplet format
+	//according to the specified geometry.
+	png2ElectroData(height, width, rgb_image, canvas, maxV);
+	genSparseFile(sparseTripletFile, height, width, canvas, N);
 
 	fclose(sparseTripletFile);
 
