@@ -23,27 +23,33 @@ public:
     QWidget *widget;
     QWidget *widgetArc;
     QWidget *RadioWidget;
+    QWidget *InfWidget;
     QWidget *widgetSave;
     QWidget *widgetClear;
     QWidget *widgetUpload;
     QWidget *widgetRun;
     QWidget *widgetVoltage;
     QWidget *widgetMaxVoltage;
+    QWidget *widgetErrtol;
     QWidget *widgetLineWidth;
     QDialog *widgetDialogue;
     QVBoxLayout *verticalLayout;
     QVBoxLayout *RadioLayout;
+    QVBoxLayout *InfLayout;
 
-
-    //POINTER TO Voltage BUTTON
+    //POINTER TO Voltage & tolerance BUTTONS
     QPushButton *btnVoltage;
     QPushButton *btnMaxVoltage;
+    QPushButton *btnErrtol;
 
     //POINTER TO LINEWIDTH BUTTON
     QPushButton *btnLineWidth;
 
     //POINTER TO RADIO BUTTON
     QRadioButton *rbSetFill;
+
+    //POINTER TO INF RADIO BUTTON
+    QRadioButton *rbInF;
 
     //POINTERS TO ARC SETTINGS & BUTTON
     QPushButton *btnArcStart;
@@ -80,6 +86,10 @@ public:
         widgetMaxVoltage->setObjectName(QStringLiteral("widgetVoltage"));
         widgetMaxVoltage->setGeometry(QRect(410, 10, 200, 100));
 
+        widgetErrtol= new QWidget(lineWidget);
+        widgetErrtol->setObjectName(QStringLiteral("widgetVoltage"));
+        widgetErrtol->setGeometry(QRect(410, 60, 200, 100));
+
         widgetLineWidth= new QWidget(lineWidget);
         widgetLineWidth->setObjectName(QStringLiteral("widgetVoltage"));
         widgetLineWidth->setGeometry(QRect(600, 60, 200, 30));
@@ -102,11 +112,11 @@ public:
 
         widget = new QWidget(lineWidget);
         widget->setObjectName(QStringLiteral("widget"));
-        widget->setGeometry(QRect(410, 120, 100, 100));
+        widget->setGeometry(QRect(410, 150, 100, 100));
 
         widgetArc = new QWidget(lineWidget);
         widgetArc->setObjectName(QStringLiteral("widgetArc"));
-        widgetArc->setGeometry(QRect(605, 120, 100, 100));
+        widgetArc->setGeometry(QRect(605, 150, 100, 100));
 
         //Vertical layout for Line,Rectangle,Ellipse
         verticalLayout = new QVBoxLayout(widget);
@@ -145,17 +155,32 @@ public:
         // Radio button defined here
         RadioWidget = new QWidget(lineWidget);
         RadioWidget->setObjectName(QStringLiteral("RadioWidget"));
-        RadioWidget->setGeometry(QRect(410,60,100,30));
+        RadioWidget->setGeometry(QRect(410,110,100,30));
 
         RadioLayout = new QVBoxLayout(RadioWidget);
         RadioLayout->setContentsMargins(0,0,0,0);
         RadioLayout->setObjectName(QStringLiteral("RadioLayout"));
 
         rbSetFill = new QRadioButton(RadioWidget);
-
         rbSetFill->setAutoExclusive(false);
         rbSetFill->setChecked(false);
         rbSetFill->setObjectName(QStringLiteral("rbSetFill"));
+
+        // Radio button for infinte toggle
+        InfWidget = new QWidget(lineWidget);
+        InfWidget->setObjectName(QStringLiteral("InfWidget"));
+        InfWidget->setGeometry(QRect(410,280,100,30));
+
+        InfLayout = new QVBoxLayout(InfWidget);
+        InfLayout->setContentsMargins(0,0,0,0);
+        InfLayout->setObjectName(QStringLiteral("InfLayout"));
+
+        rbInF = new QRadioButton(InfWidget);
+        rbInF->setAutoExclusive(false);
+        rbInF->setChecked(false);
+        rbInF->setObjectName(QStringLiteral("rbInf"));
+
+
 
         // Other stand alone buttons
         btnSave = new QPushButton(widgetSave);
@@ -175,6 +200,9 @@ public:
 
         btnMaxVoltage = new QPushButton(widgetMaxVoltage);
         btnMaxVoltage->setObjectName(QStringLiteral("btnMaxVoltage"));
+
+        btnErrtol= new QPushButton(widgetErrtol);
+        btnErrtol-> setObjectName(QStringLiteral("btnErrtol"));
 
         btnLineWidth = new QPushButton(widgetLineWidth);
         btnLineWidth->setObjectName(QStringLiteral("btnLineWidth"));
@@ -201,8 +229,10 @@ public:
         btnEllipse->setText(QApplication::translate("lineWidget","Ellipse",0));
         btnVoltage->setText(QApplication::translate("lineWidget","set Voltage",0));
         btnMaxVoltage->setText(QApplication::translate("lineWidget","set MaxVoltage",0));
+        btnErrtol->setText(QApplication::translate("linewidget","Error Tolerance",0));
         btnLineWidth->setText(QApplication::translate("lineWidget","Set Line Width",0));
         rbSetFill->setText(QApplication::translate("lineWidget","Charge Fill",0));
+        rbInF->setText(QApplication::translate("lineWidget","Infinite plates",0));
     } //RETRANSLATE UI
 };
 

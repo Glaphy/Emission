@@ -27,11 +27,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        linewidget.cpp
+        linewidget.cpp \
+    3dim.cpp \
+    EasyPlotting.cpp
 
 HEADERS += \
     ui_linewidget.h \
-    linewidget.h
+    linewidget.h \
+    stb_image.h \
+    main.h
 
 FORMS += \
         linewidget.ui

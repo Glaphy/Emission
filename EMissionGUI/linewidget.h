@@ -1,6 +1,7 @@
 #ifndef LINEWIDGET_H
 #define LINEWIDGET_H
 
+#include "main.h"
 #include "ui_linewidget.h"
 
 #pragma once
@@ -40,6 +41,8 @@ public:
     int MaxVolts;
     int Fill;
 
+    int Errvar;
+
     // shapes and variables for GUI corrector.
     int Refresh;
 
@@ -66,9 +69,13 @@ private slots:
 
     void on_btnSave_clicked();
     void on_btnClear_clicked();
+    void on_btnUpload_clicked();
+    void on_btnRun_clicked();
 
     void on_btnVoltage_clicked();
     void on_btnMaxVoltage_clicked();
+
+    void on_btnErrtol_clicked();
 
     void on_btnLineWidth_clicked();
 

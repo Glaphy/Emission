@@ -43,7 +43,7 @@ int main(int argc, char *argv[]) {
     }*/
   
   //explicit definition of height and width
-  float canvas[50][50][2] = {0};	//initialise canvas to hold (voltage, plate)
+  float canvas[400][400][2] = {0};	//initialise canvas to hold (voltage, plate)
   float max = 1000;	//this value must come from Tom
   
   /*DESCRIPTION:

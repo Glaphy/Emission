@@ -12,15 +12,11 @@ using namespace std;
 
 #define CHANNEL_NO 3
 	
-int trivialMatrix(char* filename, double tolerance, bool infinite) {
+	
+	
+int trivialMatrix(char* filename, double tolerance, bool infinite, double max) {
 	int width, height, bpp;
 	//char filename[25]="";
-
-	/*if(argc!=2){
-		puts("Please use the following syntax:");
-		puts("<program_name> <image_name>.png");
-		exit(1);
-	}*/
 
 	//strcpy(filename, argv[1]);
 	
@@ -30,7 +26,7 @@ int trivialMatrix(char* filename, double tolerance, bool infinite) {
 	}
 
 	unsigned char *rgb_image=stbi_load(filename, &width, &height, &bpp, CHANNEL_NO);
-	printf("%dx%d\n%d\n", height, width, bpp);
+    //printf("%dx%d\n%d\n", height, width, bpp);
 
 
 	//Allocating the canvas array.
@@ -44,7 +40,7 @@ int trivialMatrix(char* filename, double tolerance, bool infinite) {
 		}
 	}
 
-	float max = 1000;	//this value must come from Tom
+	//loat max = 1000;	//this value must come from Tom
 	
 	/*DESCRIPTION:
 	use max to calculate volatge from colors:
@@ -92,18 +88,17 @@ int trivialMatrix(char* filename, double tolerance, bool infinite) {
 //********//INITIATING VARIABLES//*********//
 
 double t=0; //time zero
-double tmax=1000;
+double tmax=100000;
 double error=0;
-double dt=0.1;
+double dt=1;
 double v=1;
 int xmin=0;
 int xmax2=height*1.2;
-int xmax=xmax2-1;
+int xmax=xmax2-1.2;
 int ymax2=width*1.2;
 int ymax=ymax2-1;
 int dx=1;
 double dy=dx;
-int y=0;
 double total;
 
 
@@ -124,9 +119,6 @@ for (int i=xmin;i<xmax;i=i+dx){
 for(int j=xmin;j<ymax;j=j+dy){
 	yvalues[j]=j;
 }
-int midx=(sizeof(xvalues)/sizeof(double))/2;
-int midy=(sizeof(yvalues)/sizeof(double))/2;
-
 
 //centering the presented matrix
 int shiftx, shifty;
@@ -215,7 +207,7 @@ while (tmax >= t){
 			}				
 			
 			//Boundaries//
-			double M_1,M_2,M_0;
+            double M_1;
 			M_1=(uplus[(xmin+2)][i][0]-uplus[(xmin+1)][i][0]);
 			uplus[xmin][i][0]=uplus[(xmin+1)][i][0]-M_1;
 			M_1=(uplus[(ymax-2)][i][0]-uplus[(ymax-1)][i][0]);
@@ -231,7 +223,7 @@ while (tmax >= t){
 	
 	//ERROR CONTROL    
 	if ( error*100/total/dt  < tolerance && (1000-tmax)/dt != 0 ) {
-		cout << "Error tolerance reached: " << error*100/total/dt  << "% " << (1000-tmax)/dt << endl;
+        cout << "Error tolerance reached: " << error*100/total/dt  << "% " << (100000-tmax)/dt << endl;
 		break;
 	}
 	
@@ -262,14 +254,13 @@ delete[] canvas;
 //********//PLOTTING SECTION//*********//
 
 //POTENTIALS//	
-for(int j=shifty+1;j<(ymax-shifty);j=j+dx){
-	for(int i=shiftx+1;i<(xmax-shiftx);i=i+dx){
+for(int j=shifty+1;j<(ymax-shifty);j=j+4*dx){
+    for(int i=shiftx+1;i<(xmax-shiftx);i=i+4*dx){
 		gauss_out << i-shiftx << " " << j-shifty+1 << " " << u[j][i]<< endl;;
 	}
 	gauss_out << " " << endl;
 }
 gauss_out.close();
-cout << u[0][0] << endl;
 
 
 //***************TEST********************//
@@ -283,7 +274,6 @@ for(int j=0;j<(ymax2);j=j+dx){
 	plot << " " << endl;
 }
 plot.close();
-cout << u[0][0] << endl;
 
 //GRADIENTS//
 char grad_file[50]="grad.dat";
@@ -306,19 +296,19 @@ for(int j=0;j<(ymax2-2*shifty);j=j+dx){
 	grad << " " << endl;
 }
 grad.close();
-cout << u[0][0] << endl;
 
 return 0;
 }
 
 
 
-int main() {
-char png_name[]="1.png";
-double tolerance=0.1;
-bool infinite=false;
-trivialMatrix(png_name,tolerance,infinite);	
-	
-	
-return 0;
-}
+//int main() {
+//char png_name[]="1.png";
+//double tolerance=0.1;
+//bool infinite=false;
+//double max=1000;
+//trivialMatrix(png_name,tolerance,infinite,max);
+
+
+//return 0;
+//}

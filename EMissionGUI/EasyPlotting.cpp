@@ -5,7 +5,7 @@
 
 using namespace std;
 
-int main(){
+int EasyPlotting(){
 
   ofstream inFile;
   inFile.open("PlottingFile"); //Opening plotting file
@@ -19,13 +19,15 @@ int main(){
   inFile << "set output \"GnuPlates.eps\" \n";
 
   //Plotting datafile (be sure the datafile is present in the directory)
-  inFile << "splot \"Plates.dat\" with lines\n";
+  inFile << "splot \"datpic.dat\" with lines\n";
 
   //Closing file
   inFile.close();
 
   //plotting with gnuplot
   system("gnuplot -p <PlottingFile");
+	
+  system("evince GnuPlates.eps");
 
   return 0;
 }

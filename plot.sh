@@ -11,10 +11,9 @@ set pm3d
 set palette rgb 22,13,-31
 set terminal postscript color
 set output "$1.eps"
-splot "$1.dat" with lines
+splot "$1.dat" every 50 with points not
 EOF
 
-open "$1".eps
 exit 0
 
 #set palette rgbformulae 22,13,-31

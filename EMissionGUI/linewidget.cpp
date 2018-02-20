@@ -7,18 +7,17 @@
 #include <QPainter>
 #include <QPixmap>
 #include <QPixmapCache>
-
+#include <QString>
 #include <QPoint>
 
 #define COLOUR 0
 
-
-
 lineWidget::lineWidget(QWidget *parent) :
     QWidget(parent),ui(new Ui::lineWidget)
 {
+
     ui->setupUi(this);
-    mPix = QPixmap(100,100);
+    mPix = QPixmap(400,400);
     mPix.fill(Qt::white);
 
 
@@ -30,6 +29,9 @@ lineWidget::lineWidget(QWidget *parent) :
     NegVolts = 0;
     PosVolts=0;
     MaxVolts=5000;
+
+    //Error tolerance variable
+    Errvar= 0.000001;
 
     //preset Arc angle values
     SpanAngle = 60*16;
@@ -108,14 +110,15 @@ void lineWidget::mouseReleaseEvent(QMouseEvent *event){
     mousePressed = false;
     update();
     Refresh=Refresh+1;
-    //update();
-    //Refresh= Refresh+1;
 }
 
 
 void lineWidget::paintEvent(QPaintEvent *event){
 
     painter.begin(this);
+    if(!drawStarted){
+        painter.drawPixmap(0,0,mPix);
+    }
     //When the mouse is pressed
     if(mousePressed){
         // we are taking QPixmap reference again and again
@@ -229,6 +232,18 @@ void lineWidget::on_btnVoltage_clicked(){
     //! [0]
 }
 
+void lineWidget::on_btnErrtol_clicked(){
+    //! [0]
+        bool ok;
+        int i = QInputDialog::getDouble(this, tr("Percentage Error tolerance for Method 1"),
+                                     tr("Please input a float value (very small for good accuracy):"), 0,0, 100, 0.0001, &ok);
+        if (ok){
+            Errvar = i;
+        }
+
+    //! [0]
+}
+
 
 void lineWidget::on_btnMaxVoltage_clicked(){
     //! [0]
@@ -302,4 +317,37 @@ void lineWidget::on_btnSave_clicked()
 {
     QFile file("datpic.png");
     mPix.save(&file,"PNG",-1);
+}
+
+void lineWidget::on_btnUpload_clicked(){
+    //! [0]
+        bool ok;
+        QString filename = QInputDialog::getText(this, tr("Upload PNG"),
+                                     tr("Provide filename of PNG:"), QLineEdit::Normal, "", &ok);
+        if (ok && !filename.isEmpty()){
+            mPix.load(filename);
+            QFile file("datpic.png");
+            mPix.save(&file,"PNG",-1);
+
+        }
+
+    //! [0]
+}
+
+void lineWidget::on_btnRun_clicked(){
+    extern int maxVolt;
+    maxVolt = MaxVolts;
+
+    extern double errtol;
+    errtol = Errvar;
+
+    if(ui->rbInF->isChecked()){
+        extern bool inf;
+        inf = true;
+    }
+
+
+
+
+    close();
 }
