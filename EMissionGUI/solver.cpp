@@ -1,17 +1,30 @@
+#include <stdint.h>
+#include <string.h>
 #include<fstream>
 #include<iostream>
+#include<stdlib.h>
+#include<math.h>
+#include<cmath>
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_ONLY_PNG
 #include "stb_image.h"
-
+#include<time.h>
 
 using namespace std;
 
 #define CHANNEL_NO 3
 	
-int trivialMatrix(char* filename, double tolerance, bool infinite,double max) {
+int trivialMatrix(char* filename, double tolerance, bool infinite,double max, double n) {
   int width, height, bpp;
   //char filename[25]="";
+  
+  /*if(argc!=2){
+    puts("Please use the following syntax:");
+    puts("<program_name> <image_name>.png");
+    exit(1);
+    }*/
+  
+  //strcpy(filename, argv[1]);
   
   if(fopen(filename, "r")==NULL){
     printf("Failed to open %s. Please check the file and try again\n.", filename);
@@ -83,12 +96,12 @@ int trivialMatrix(char* filename, double tolerance, bool infinite,double max) {
   double t=0; //time zero
   double tmax=10000;
   double error=0;
-  double dt=0.22;
+  double dt=0.2;
   double v=1;
   int xmin=0;
-  int xmax2=height*1.2;
+  int xmax2=height*n;
   int xmax=xmax2-1;
-  int ymax2=width*1.2;
+  int ymax2=width*n;
   int ymax=ymax2-1;
   int dx=1;
   double dy=dx;
@@ -118,8 +131,8 @@ int trivialMatrix(char* filename, double tolerance, bool infinite,double max) {
   
 
   //create array of x and y values
-  double xvalues[xmax];
-  double yvalues[ymax];
+  double xvalues[xmax2];
+  double yvalues[ymax2];
   for (int i=xmin;i<xmax;i=i+dx){
     xvalues[i]=i;
   }
@@ -140,21 +153,27 @@ int trivialMatrix(char* filename, double tolerance, bool infinite,double max) {
   //u will hold the current time values, uplus will hold the n+1 time value
   //assume that first two arrays are the same
   double u[ymax2][xmax2];
-  double uplus[ymax2][xmax2][2];
+  float ***uplus= new float **[xmax2]();
+  
+  for(int i=0; i<xmax2; i++){
+    uplus[i]=new float*[ymax2]();
+    
+    for(int j=0; j<ymax2; j++){
+      uplus[i][j]=new float[2]();
+    }
+  }
   
   for(int j=xmin;j<ymax2;j=j+dx){
     for(int i=xmin;i<xmax2;i=i+dx){
-      u[j][i]=0;
-      uplus[j][i][0]=0;
-      uplus[j][i][1]=0;
+      u[j][i]=0;      
     }
   }    
   
   
   
     //FROM CANVAS TO UPLUS 
-    for(int j=shifty; j<(ymax-shifty); j=j+dx){
-      for(int i=shiftx;i<(xmax-shiftx);i=i+dx){
+    for(int j=shifty; j<(ymax2-shifty); j=j+dx){
+      for(int i=shiftx;i<(xmax2-shiftx);i=i+dx){
 	if(canvas[(j-shifty)][(i-shiftx)][1] == 1 ) {
 	  uplus[j][i][0]=canvas[(j-shifty)][(i-shiftx)][0];
 	  uplus[j][i][1]=1;	
@@ -166,7 +185,7 @@ int trivialMatrix(char* filename, double tolerance, bool infinite,double max) {
     //Extending Sides to simulate infinite plates
     if(infinite) {
       //sides N-S
-      for(int j=shifty; j<(ymax-shifty); j=j+dx){
+      for(int j=shifty; j<(ymax2-shifty); j=j+dx){
 	if(canvas[(j-shifty)][0][1]== 1 ) {
 	  for(int p=0;p<=shifty;p++) { 
 	    uplus[j][shiftx-p][0]= canvas[(j-shifty)][0][0];
@@ -182,7 +201,7 @@ int trivialMatrix(char* filename, double tolerance, bool infinite,double max) {
       }
       
       //sides E-W
-      for(int i=shiftx; i<(xmax-shiftx); i=i+dx){
+      for(int i=shiftx; i<(xmax2-shiftx); i=i+dx){
 	if(canvas[0][(i-shifty)][1] == 1 ) {
 	  for(int p=0;p<=shiftx;p++) { 
 	    uplus[shiftx-p][i][0]= canvas[0][(i-shifty)][0];
@@ -203,6 +222,7 @@ int trivialMatrix(char* filename, double tolerance, bool infinite,double max) {
     //Looping through time 
     
     while (tmax >= t){
+      double M_1;
       error=0;
       total=0;
       
@@ -218,20 +238,19 @@ int trivialMatrix(char* filename, double tolerance, bool infinite,double max) {
 	  }				
 	  
 	  //Boundaries//
-	  double M_1,M_2,M_0;
 	  M_1=(uplus[(xmin+2)][i][0]-uplus[(xmin+1)][i][0]);
 	  uplus[xmin][i][0]=uplus[(xmin+1)][i][0]-M_1;
 	  M_1=(uplus[(ymax-2)][i][0]-uplus[(ymax-1)][i][0]);
 	  uplus[ymax][i][0]=uplus[(ymax-1)][i][0]-M_1;
+	}
 	  M_1=(uplus[j][(xmin+2)][0]-uplus[j][(xmin+1)][0]);
 	  uplus[j][xmin][0]=uplus[j][(xmin+1)][0]-M_1;
 	  M_1=(uplus[j][(xmax-2)][0]-uplus[j][(xmax-1)][0]);
 	  uplus[j][xmax][0]=uplus[j][(xmax-1)][0]-M_1;
-	}
 	
       }
       
-      
+      //cout << "Error tolerance reached: " << (error*100/total)*(1/dt)  << "% " << (10000-tmax)/dt << " iterations"<< endl;
       //ERROR CONTROL    
       if ( (error*100/total)*(1/dt)  < tolerance && (10000-tmax)/dt != 0 ) {
 	cout << "Error tolerance reached: " << (error*100/total)*(1/dt)  << "% " << (10000-tmax)/dt << " iterations"<< endl;
@@ -261,15 +280,24 @@ int trivialMatrix(char* filename, double tolerance, bool infinite,double max) {
   
   delete[] canvas;
   
+    //Deallocating the canvas array.
+  for(int i=0; i<xmax2; i++){
+    for(int j=0; j<ymax2; j++){
+      delete[] uplus[i][j];
+    }
+    
+    delete[] uplus[i];
+  }
   
+  delete[] uplus;
   
   
   //********//PLOTTING SECTION//*********//
   
   //POTENTIALS//	
-  for(int j=shifty;j<(ymax-shifty);j=j+stepy*dx){
-    for(int i=shiftx;i<(xmax-shiftx);i=i+stepx*dx){
-      gauss_out << i-shiftx << " " << j-shifty << " " << u[ymax2-shifty-j][i]<< endl;
+  for(int j=shifty;j<(ymax2-shifty);j=j+stepy*dx){
+    for(int i=shiftx;i<(xmax2-shiftx);i=i+stepx*dx){
+      gauss_out << u[ymax-j][i]<< endl; //i-shiftx << " " << j-shifty << " "
     }
     gauss_out << " " << endl;
   }
@@ -286,12 +314,13 @@ int trivialMatrix(char* filename, double tolerance, bool infinite,double max) {
     for (int w=xmin;w<(xmax2-2*shiftx);w=w+dx){
       ugradx[o][w]=u[(o+shifty)][(w+shiftx)]-u[(o+shifty)][(w+shiftx+1)];
       ugrady[o][w]=u[(o+shifty)][(w+shiftx)]-u[(o+shifty+1)][(w+shiftx)];
+      
     }
   }
  
-  for(int j=0;j<(ymax2-2*shifty);j=j+stepy*dx){
-    for(int i=0;i<(xmax2-2*shiftx);i=i+stepx*dx){
-      grad << xvalues[i] << " " << yvalues[j] << " " << ugradx[j][i]/((stepy*max)/1000)<< " " << ugrady[j][i]/((stepy*max)/1000)<< endl;;
+  for(int j=0;j<(ymax2-2*shifty);j=j+2*stepy*dx){
+    for(int i=0;i<(xmax2-2*shiftx);i=i+2*stepx*dx){
+      grad << xvalues[i] << " " << yvalues[j] << " " << ugradx[j][i]*sqrt(height*width)/(max)<< " " << ugrady[j][i]*sqrt(height*height+width*width)/(10*max) << endl;
     }
     grad << " " << endl;
   }
@@ -301,15 +330,19 @@ int trivialMatrix(char* filename, double tolerance, bool infinite,double max) {
 }
 
 
-
-//int main() {
-//  char png_name[]="unibrow.png";
-//  double tolerance=1;
-//  bool infinite=true;
-//  double max=10000;
-//  trivialMatrix(png_name,tolerance,infinite,max);
-  
-//  return 0;
-//}
+/*
+int main(int argc, char* argv[]) {
+  clock_t start_t,end_t;
+  start_t=clock();
+  char png_name[]="circle.png";
+  double n=atof(argv[1]);
+  double tolerance=0.001;
+  bool infinite=true;
+  double max=10000;
+  trivialMatrix(png_name,tolerance,infinite,max, n);
+  end_t=clock();
+  cout<< (double)(end_t-start_t)/CLOCKS_PER_SEC << endl;
+  return 0;
+}*/
 
 
