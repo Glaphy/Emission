@@ -21,14 +21,9 @@ int main(int argc, char *argv[])
 
     a.exec();
 
-    //cout << inf << endl;
-    //cout << errtol << endl;
-
     trivialMatrix(png_name,errtol,inf,maxVolt);
 
     EasyPlotting();
-
-
 
     return 0;
 }

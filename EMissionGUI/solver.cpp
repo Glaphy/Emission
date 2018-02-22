@@ -1,14 +1,9 @@
-#include <stdint.h>
-#include <string.h>
 #include<fstream>
 #include<iostream>
-#include<stdlib.h>
-#include<math.h>
-#include<cmath>
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_ONLY_PNG
 #include "stb_image.h"
-#include<time.h>
+
 
 using namespace std;
 

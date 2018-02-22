@@ -5,6 +5,16 @@
 #include <iostream>
 #include <string>
 #include <QtGlobal>
+
+//solver libraries
+#include <stdint.h>
+#include <string.h>
+#include<fstream>
+#include<iostream>
+#include<stdlib.h>
+#include<math.h>
+#include<cmath>
+#include<time.h>
 using namespace std;
 
 void trivialMatrix(char* filename, double tolerance, bool infinite, double max);
