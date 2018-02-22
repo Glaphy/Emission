@@ -9,6 +9,7 @@
 #include <QPixmapCache>
 #include <QString>
 #include <QPoint>
+#include <QLabel>
 
 #define COLOUR 0
 
@@ -16,8 +17,10 @@ lineWidget::lineWidget(QWidget *parent) :
     QWidget(parent),ui(new Ui::lineWidget)
 {
 
+
+
     ui->setupUi(this);
-    mPix = QPixmap(400,400);
+    mPix = QPixmap(350,350);
     mPix.fill(Qt::white);
 
 
