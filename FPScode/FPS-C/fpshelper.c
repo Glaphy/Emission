@@ -98,3 +98,33 @@ void png2ElectroData(int height, int width, unsigned char *rgb_image, float canv
 		}
 	}
 }
+
+//this prints the solution matrix in the format that gnuplot expects
+void my2Print_Dense_Matrix(char *what, SuperMatrix *A) {
+	
+	DNformat     *Astore = (DNformat *) A->Store;
+	register int i, j, lda = Astore->lda;
+	double       *dp;
+
+	printf("\nDense matrix %s:\n", what);
+	printf("Stype %d, Dtype %d, Mtype %d\n", A->Stype,A->Dtype,A->Mtype);
+	dp = (double *) Astore->nzval;
+	printf("nrow %d, ncol %d, lda %d\n", A->nrow,A->ncol,lda);
+	printf("\n");
+	int nroot = sqrt(A->nrow);
+	int columncounter = 0;
+	int counter = 1;
+	for (j = 0; j < A->ncol; ++j) {
+		for (i = 0; i < A->nrow; ++i) {
+			printf("%d %d %f\n", columncounter, (i%nroot), dp[i + j*lda]);
+			if (counter % nroot == 0) {
+				printf("\n");
+				columncounter += 1;
+			}
+			counter += 1;
+		}
+	}
+	printf("\n");
+
+	fflush(stdout);
+}
