@@ -28,8 +28,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         linewidget.cpp \
-    3dim.cpp \
-    EasyPlotting.cpp
+    EasyPlotting.cpp \
+    solver.cpp
 
 HEADERS += \
     ui_linewidget.h \

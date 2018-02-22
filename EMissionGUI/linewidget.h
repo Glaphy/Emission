@@ -41,7 +41,7 @@ public:
     int MaxVolts;
     int Fill;
 
-    int Errvar;
+    double Errvar;
 
     // shapes and variables for GUI corrector.
     int Refresh;

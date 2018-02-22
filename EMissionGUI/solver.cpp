@@ -18,14 +18,6 @@ int trivialMatrix(char* filename, double tolerance, bool infinite,double max) {
   int width, height, bpp;
   //char filename[25]="";
   
-  /*if(argc!=2){
-    puts("Please use the following syntax:");
-    puts("<program_name> <image_name>.png");
-    exit(1);
-    }*/
-  
-  //strcpy(filename, argv[1]);
-  
   if(fopen(filename, "r")==NULL){
     printf("Failed to open %s. Please check the file and try again\n.", filename);
     exit(2);
@@ -96,7 +88,7 @@ int trivialMatrix(char* filename, double tolerance, bool infinite,double max) {
   double t=0; //time zero
   double tmax=10000;
   double error=0;
-  double dt=0.1;
+  double dt=0.22;
   double v=1;
   int xmin=0;
   int xmax2=height*1.2;
@@ -315,14 +307,14 @@ int trivialMatrix(char* filename, double tolerance, bool infinite,double max) {
 
 
 
-int main() {
-  char png_name[]="unibrow.png";
-  double tolerance=1;
-  bool infinite=true;
-  double max=10000;
-  trivialMatrix(png_name,tolerance,infinite,max);
+//int main() {
+//  char png_name[]="unibrow.png";
+//  double tolerance=1;
+//  bool infinite=true;
+//  double max=10000;
+//  trivialMatrix(png_name,tolerance,infinite,max);
   
-  return 0;
-}
+//  return 0;
+//}
 
 

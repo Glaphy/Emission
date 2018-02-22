@@ -31,7 +31,7 @@ lineWidget::lineWidget(QWidget *parent) :
     MaxVolts=5000;
 
     //Error tolerance variable
-    Errvar= 0.000001;
+    Errvar= 0.01;
 
     //preset Arc angle values
     SpanAngle = 60*16;
@@ -235,8 +235,8 @@ void lineWidget::on_btnVoltage_clicked(){
 void lineWidget::on_btnErrtol_clicked(){
     //! [0]
         bool ok;
-        int i = QInputDialog::getDouble(this, tr("Percentage Error tolerance for Method 1"),
-                                     tr("Please input a float value (very small for good accuracy):"), 0,0, 100, 0.0001, &ok);
+        double i = QInputDialog::getDouble(this, tr("Percentage Error tolerance for Method 1"),
+                                     tr("Please input a float value (very small for good accuracy):"), 0,0, 100, 1, &ok);
         if (ok){
             Errvar = i;
         }
