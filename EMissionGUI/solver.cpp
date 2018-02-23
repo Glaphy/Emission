@@ -312,8 +312,8 @@ int trivialMatrix(char* filename, double tolerance, bool infinite,double max, do
   
   for(int o=xmin;o<(ymax2-2*shifty);o=o+dx){
     for (int w=xmin;w<(xmax2-2*shiftx);w=w+dx){
-      ugradx[o][w]=u[(o+shifty)][(w+shiftx)]-u[(o+shifty)][(w+shiftx+1)];
-      ugrady[o][w]=u[(o+shifty)][(w+shiftx)]-u[(o+shifty+1)][(w+shiftx)];
+      ugradx[o][w]=-(u[(o+shifty)][(w+shiftx)]-u[(o+shifty)][(w+shiftx+1)]);
+      ugrady[o][w]=-(u[(o+shifty)][(w+shiftx)]-u[(o+shifty+1)][(w+shiftx)]);
       
     }
   }
