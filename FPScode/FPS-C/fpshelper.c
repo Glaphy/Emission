@@ -3,13 +3,11 @@
 void genSparseFile(FILE* sparseTripletFile, int height, int width, float canvas[height][width][2], int N){
 	int Nsquare=N*N;
 	int targets[Nsquare];
-	int target_idx=0;
 
-	//Linearises the canvas. This looks like it could be heavily optimised.
+	//Linearises the canvas.
 	for(int i=0; i<N; i++){
 		for(int j=0; j<N; j++){
-			targets[target_idx]=canvas[i][j][1];
-			target_idx++;
+			targets[i*N+j]=canvas[i][j][1];
 		}
 	}
 
@@ -99,32 +97,81 @@ void png2ElectroData(int height, int width, unsigned char *rgb_image, float canv
 	}
 }
 
-//this prints the solution matrix in the format that gnuplot expects
-void my2Print_Dense_Matrix(char *what, SuperMatrix *A) {
-	
-	DNformat     *Astore = (DNformat *) A->Store;
-	register int i, j, lda = Astore->lda;
-	double       *dp;
+//This fills the voltage and electric files in the format that gnuplot expects.
+void printPlotData(char *what, SuperMatrix *A) {
+	DNformat* Astore = (DNformat*) A->Store;
+	int i;
+	double *dp, gradx, grady, scalefactor, normx, normy;
+	FILE* voltagefile = fopen("potentials.dat","w");
+	FILE* electrofile = fopen("electricfield.dat","w");
 
-	printf("\nDense matrix %s:\n", what);
-	printf("Stype %d, Dtype %d, Mtype %d\n", A->Stype,A->Dtype,A->Mtype);
 	dp = (double *) Astore->nzval;
-	printf("nrow %d, ncol %d, lda %d\n", A->nrow,A->ncol,lda);
-	printf("\n");
 	int nroot = sqrt(A->nrow);
 	int columncounter = 0;
 	int counter = 1;
-	for (j = 0; j < A->ncol; ++j) {
-		for (i = 0; i < A->nrow; ++i) {
-			printf("%d %d %f\n", columncounter, (i%nroot), dp[i + j*lda]);
-			if (counter % nroot == 0) {
-				printf("\n");
-				columncounter += 1;
-			}
-			counter += 1;
+	
+	gradx = dp[0] - dp[1];
+	grady = dp[0] - dp[nroot];
+	scalefactor = 4*sqrt(gradx*gradx+grady*grady);
+
+	for (i = 0; i < A->nrow; i++) {
+		gradx = dp[i] - dp[i+1];
+		grady = dp[i] - dp[i+nroot];
+		normx = gradx / scalefactor;
+		normy = grady / scalefactor;
+		
+		//zero any outlying points in electric field.
+		if(i>((A->nrow)-nroot) || (i%nroot == 0)){
+			fprintf(electrofile,"%d %d 0 0\n", columncounter, (i%nroot));
 		}
+		
+		else{
+			fprintf(electrofile,"%d %d %f %f\n", columncounter, (i%nroot), normy, normx);
+		}
+
+		fprintf(voltagefile,"%d %d %f\n", columncounter, (i%nroot), dp[i]);
+
+		//Make a newline between each full row in the files.
+		if(counter % nroot == 0){
+			fprintf(electrofile,"\n");
+			fprintf(voltagefile,"\n");
+			columncounter++;
+		}
+
+		counter++;
 	}
+
 	printf("\n");
 
+	fclose(electrofile);
+	fclose(voltagefile);
 	fflush(stdout);
+}
+
+void plotData(int skipEveryX, int skipEveryY, int scaleFactor){
+	FILE* gpProcess=popen("gnuplot", "w");
+	char skipEveryP[40]="";
+	char skipEveryE[256]="";
+
+	sprintf(skipEveryP, "splot \"potentials.dat\" every %d:%d", skipEveryX, skipEveryY);
+	sprintf(skipEveryE, "plot \"electricfield.dat\" every %d:%d u 1:2:3:4 w vectors nofilled head lw 1", skipEveryX, skipEveryY);
+
+	char* gpElectric[]={"set term qt 1", skipEveryE};
+
+	char* gpPotential[]={"set term qt 0", "set pm3d", "set hidden3d",\
+		 skipEveryP, "pause mouse key", "if (MOUSE_KEY != 27) reread"};
+
+	int gpElectricLen=(double)sizeof(gpElectric)/sizeof(char*);
+	int gpPotentialLen=(double)sizeof(gpPotential)/sizeof(char*);
+
+
+	for(int i=0; i<gpElectricLen; i++){
+		fprintf(gpProcess,"%s\n", gpElectric[i]);
+	}
+
+	for(int i=0; i<gpPotentialLen; i++){
+		fprintf(gpProcess,"%s\n", gpPotential[i]);
+	}
+
+	pclose(gpProcess);
 }

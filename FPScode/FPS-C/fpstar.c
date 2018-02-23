@@ -3,32 +3,37 @@
 #include "fpstar.h"
 
 int main(int argc, char** argv){
-	//********INITIALISATIONS**********//
+
+	//********INITIALISATIONS AND INPUT CHECKING**********// 
+
 	//Initialise Csparse formats
-	cs *ST;
-	cs*CC;
+	cs* ST;
+	cs* CC;
 	//Initialise SuperLU formats
 	SuperMatrix A, L, U, B;
-	double   *a;
-	int      *asub, *xa;
-	int      *perm_r; /* row permutations from partial pivoting */
-	int      *perm_c; /* column permutation vector */
-	int      nrhs, info, m, n, nnz;
-	superlu_options_t options;
-	SuperLUStat_t stat;	//to hold performance statistics. Initialisation happens before solve	
+	double *a;
+	int *asub, *xa;
+	//perm_r: row permutations from partial pivoting.
+	//perm_c: column permutation vector.
+	int *perm_r, *perm_c; 
+	int nrhs, info, m, n, nnz;
+	superlu_options_t	options;
+	//Variables to hold performance statistics.
+	SuperLUStat_t		stat;	
+	mem_usage_t		mem_usage;
 	clock_t start_clock, end_clock;
 	double total_clock;
-	mem_usage_t   mem_usage; //to hold the memory statistics
 
 	//check for arguments
-	if(argc!=2){
-		printf("Program Syntax:\n\n./<program_name> <image>.png\n\n");
+	if(argc!=4){
+		printf("Program Syntax:\n\n./<program_name> <image>.png <skip X> <skip Y>\n\n");
 		exit(INPUT_FAILURE);
 	}
 
 	//Reserve variables for height, width, and bits per pixel of the PNG.
 	int width, height, bpp;
 	char filename[25]="";
+	int skipEveryX=atoi(argv[2]), skipEveryY=atoi(argv[3]);
 	strcpy(filename, argv[1]);
 
 	if(fopen(filename, "r")==NULL){
@@ -36,6 +41,7 @@ int main(int argc, char** argv){
 		exit(2);
 	}
 	
+	//Start the clock for the pre-solving 
 	start_clock=clock();
 	//Load the PNG into memory.
 	unsigned char *rgb_image=stbi_load(filename, &width, &height, &bpp, CHANNEL_NO);
@@ -58,20 +64,25 @@ int main(int argc, char** argv){
 		exit(3);
 	}
 
+	//**********PARSING PNG DATA AND GENERATING PROBLEM DATA**********//
 
 	//These two functions convert the specified PNG into voltages based on colours
 	//fill the canvas, and update the sparseTriplet file and the b vector
 	//according to the specified geometry.
 	png2ElectroData(height, width, rgb_image, canvas, maxV);
 	genSparseFile(sparseTripletFile, height, width, canvas, N);
+
+	//Linearising canvas as the b vector.
 	for(int i=0; i<N; i++){
 		for(int j=0; j<N; j++){
 			b[i*N+j]=canvas[i][j][0];
 		}
 	}
 	
-	//*******FROM SPARSE TRIPLET TO SOLUTION************//
-	fseek(sparseTripletFile,0,SEEK_SET); //reset pointer to start of file
+	//**********CONVERTING FROM COO TO CCS FORMAT**********//
+
+	//reset pointer to start of file
+	fseek(sparseTripletFile,0,SEEK_SET);
 	
 	//load the Sparse Triplet file into cs ST form, then compress it to cs CC form
 	ST = cs_load(sparseTripletFile);
@@ -82,51 +93,62 @@ int main(int argc, char** argv){
 	n = CC->n; // = number of columns
 	m = CC->m; // = numer of rows
 		
-	/* Allocate space for matrix A. */
-	if ( !(a = doubleMalloc(nnz)) ) ABORT("Malloc fails for a[].");
-	if ( !(asub = intMalloc(nnz)) ) ABORT("Malloc fails for asub[].");
-	if ( !(xa = intMalloc(n+1)) ) ABORT("Malloc fails for xa[].");
+	//Allocate space for matrix A.
+	if(!(a=doubleMalloc(nnz)))
+		ABORT("Malloc fails for a[].");
+	if(!(asub=intMalloc(nnz)))
+		ABORT("Malloc fails for asub[].");
+	if(!(xa=intMalloc(n+1)))
+		ABORT("Malloc fails for xa[].");
 	
 	//get it into superLU expected form by ->. i.e. go from CS notation to SLU
 	a = CC->x; //of size nzmax
 	asub = CC->i; //of size nzmax
 	xa = CC->p; //of size n(columns) + 1
 	
+	//End timing of pre-solving part of the code and print the results.
 	end_clock=clock();
 	total_clock=(double)(end_clock-start_clock)/CLOCKS_PER_SEC;
 	printf("\n\n********%f********\n\n", total_clock);
+
+	//*****SOLVING THE SYSTEM WITH LU DECOMPOSITION FROM SUPERLU*****//
 	
-	/* Create matrix A in the format expected by SuperLU. */
+	//Create matrix A in the format expected by SuperLU.
 	dCreate_CompCol_Matrix(&A, m, n, nnz, a, asub, xa, SLU_NC, SLU_D, SLU_GE);
 
-	//create the dense matrix B to solve AX = B
-	nrhs = 1; //B matrix will be of size m * nrhs, from entries of b
+	//Create the dense matrix B to solve AX = B.
+	//B matrix will be of size m * nrhs, from entries of b.
+	nrhs = 1; 
 	dCreate_Dense_Matrix(&B, m, nrhs, b, m, SLU_DN, SLU_D, SLU_GE);
 
-	if ( !(perm_r = intMalloc(m)) ) ABORT("Malloc fails for perm_r[].");
-	if ( !(perm_c = intMalloc(n)) ) ABORT("Malloc fails for perm_c[].");
+	if(!(perm_r=intMalloc(m)))
+		ABORT("Malloc fails for perm_r[].");
+	if(!(perm_c=intMalloc(n)))
+		ABORT("Malloc fails for perm_c[].");
 
-	/* Set the default input options. */
+	//Set the default input options.
 	set_default_options(&options);
 	options.ColPerm = NATURAL;
 	options.DiagPivotThresh = 0.0;
 
-	/* Initialize the statistics variables. */
+	//Initialize the statistics variables.
 	StatInit(&stat);
 
-	/* Solve the linear system. */
+	//Solve the linear system.
 	dgssv(&options, &A, perm_c, perm_r, &L, &U, &B, &stat, &info);
 
-	//dPrint_Dense_Matrix("\n printing SOLUTION", &B);
-	my2Print_Dense_Matrix("\nSOLUTION", &B);	
+	printPlotData("\nSOLUTION", &B);	
+	plotData(skipEveryX,skipEveryY,100);
 	
 	//*********SLU PERFORMANCE STATISTICS*************//
 	
-	if ( options.PrintStat ) StatPrint(&stat);
+	if(options.PrintStat)
+		StatPrint(&stat);
+
 	dQuerySpace(&L, &U, &mem_usage);
 	printf("L\\U MB %.3f\ttotal MB needed %.3f\n", mem_usage.for_lu/1e6, mem_usage.total_needed/1e6);
 
-	/* De-allocate SLU storage */
+	// De-allocate SLU storage
 	SUPERLU_FREE (perm_r);
 	SUPERLU_FREE (perm_c);
 	Destroy_CompCol_Matrix(&A);
