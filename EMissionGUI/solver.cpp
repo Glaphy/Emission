@@ -320,7 +320,7 @@ int trivialMatrix(char* filename, double tolerance, bool infinite,double max, do
  
   for(int j=0;j<(ymax2-2*shifty);j=j+2*stepy*dx){
     for(int i=0;i<(xmax2-2*shiftx);i=i+2*stepx*dx){
-      grad << xvalues[i] << " " << yvalues[j] << " " << ugradx[j][i]*sqrt(height*width)/(max)<< " " << ugrady[j][i]*sqrt(height*height+width*width)/(10*max) << endl;
+      grad << xvalues[i] << " " << yvalues[j] << " " << ugradx[j][i]*sqrt(height*height+width*width)/(max)<< " " << ugrady[j][i]*sqrt(height*height+width*width)/(max) << endl;
     }
     grad << " " << endl;
   }
