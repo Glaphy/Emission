@@ -80,7 +80,6 @@ private slots:
     void on_btnLineWidth_clicked();
 
 
-
 private:
     //we declare a linewidget pointer object using namespace identifier;
     Ui::lineWidget *ui;

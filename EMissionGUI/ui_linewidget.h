@@ -14,6 +14,7 @@
 #include <QRadioButton>
 #include <QGroupBox>
 #include <QObject>
+#include <QComboBox>
 
 QT_BEGIN_NAMESPACE
 
@@ -36,6 +37,8 @@ public:
     QVBoxLayout *verticalLayout;
     QVBoxLayout *RadioLayout;
     QVBoxLayout *InfLayout;
+    QVBoxLayout *MethodBoxLayout;
+
 
     //POINTER TO Voltage & tolerance BUTTONS
     QPushButton *btnVoltage;
@@ -50,6 +53,9 @@ public:
 
     //POINTER TO INF RADIO BUTTON
     QRadioButton *rbInF;
+
+    //POINTER TO DROP DOWN LIST
+    QComboBox *MethodBox;
 
     //POINTERS TO ARC SETTINGS & BUTTON
     QPushButton *btnArcStart;
@@ -179,6 +185,15 @@ public:
         rbInF->setAutoExclusive(false);
         rbInF->setChecked(false);
         rbInF->setObjectName(QStringLiteral("rbInf"));
+
+        //Drop down list to choose method
+
+
+        QStringList methods = {"Iterative","Matrix"};
+        MethodBox = new QComboBox(lineWidget);
+        MethodBox->addItems(methods);
+        MethodBox->setGeometry(610,280,100,30);
+        MethodBox->setObjectName(QStringLiteral("MethodBox"));
 
 
 

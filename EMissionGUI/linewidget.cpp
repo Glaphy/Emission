@@ -344,6 +344,9 @@ void lineWidget::on_btnRun_clicked(){
     extern double errtol;
     errtol = Errvar;
 
+    extern int methodvar;
+    methodvar=ui->MethodBox->currentIndex();
+
     if(ui->rbInF->isChecked()){
         extern bool inf;
         inf = true;

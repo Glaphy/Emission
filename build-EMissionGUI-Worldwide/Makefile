@@ -224,6 +224,7 @@ DIST          = /home/SloPo/Software/Qt/5.11.0/gcc_64/mkspecs/features/spec_pre.
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/mkspecs/features/qt_config.prf \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/mkspecs/linux-g++/qmake.conf \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/mkspecs/features/spec_post.prf \
+		../EMissionGUI/.qmake.stash \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/mkspecs/features/exclusive_builds.prf \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/mkspecs/features/toolchain.prf \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/mkspecs/features/default_pre.prf \
@@ -425,6 +426,7 @@ Makefile: ../EMissionGUI/EMissionGUI.pro /home/SloPo/Software/Qt/5.11.0/gcc_64/m
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/mkspecs/features/qt_config.prf \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/mkspecs/linux-g++/qmake.conf \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/mkspecs/features/exclusive_builds.prf \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/mkspecs/features/toolchain.prf \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/mkspecs/features/default_pre.prf \
@@ -613,6 +615,7 @@ Makefile: ../EMissionGUI/EMissionGUI.pro /home/SloPo/Software/Qt/5.11.0/gcc_64/m
 /home/SloPo/Software/Qt/5.11.0/gcc_64/mkspecs/features/qt_config.prf:
 /home/SloPo/Software/Qt/5.11.0/gcc_64/mkspecs/linux-g++/qmake.conf:
 /home/SloPo/Software/Qt/5.11.0/gcc_64/mkspecs/features/spec_post.prf:
+.qmake.stash:
 /home/SloPo/Software/Qt/5.11.0/gcc_64/mkspecs/features/exclusive_builds.prf:
 /home/SloPo/Software/Qt/5.11.0/gcc_64/mkspecs/features/toolchain.prf:
 /home/SloPo/Software/Qt/5.11.0/gcc_64/mkspecs/features/default_pre.prf:
@@ -1199,7 +1202,9 @@ linewidget.o: ../EMissionGUI/linewidget.cpp ../EMissionGUI/linewidget.h \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/include/QtGui/QPixmapCache \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/include/QtGui/qpixmapcache.h \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/include/QtCore/QString \
-		/home/SloPo/Software/Qt/5.11.0/gcc_64/include/QtCore/QPoint
+		/home/SloPo/Software/Qt/5.11.0/gcc_64/include/QtCore/QPoint \
+		/home/SloPo/Software/Qt/5.11.0/gcc_64/include/QtWidgets/QLabel \
+		/home/SloPo/Software/Qt/5.11.0/gcc_64/include/QtWidgets/qlabel.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o linewidget.o ../EMissionGUI/linewidget.cpp
 
 EasyPlotting.o: ../EMissionGUI/EasyPlotting.cpp 
