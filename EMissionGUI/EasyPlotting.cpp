@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include <fstream>
-
 #include <stdlib.h>
+#include "main.h"
 
 using namespace std;
 

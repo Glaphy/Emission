@@ -843,6 +843,8 @@ moc_linewidget.cpp: ../EMissionGUI/main.h \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/include/QtWidgets/QGroupBox \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/include/QtWidgets/qgroupbox.h \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/include/QtCore/QObject \
+		/home/SloPo/Software/Qt/5.11.0/gcc_64/include/QtWidgets/QComboBox \
+		/home/SloPo/Software/Qt/5.11.0/gcc_64/include/QtWidgets/qcombobox.h \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/include/QtGui/QPainter \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/include/QtGui/qpainter.h \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/include/QtGui/qtextoption.h \
@@ -1027,6 +1029,8 @@ main.o: ../EMissionGUI/main.cpp ../EMissionGUI/main.h \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/include/QtWidgets/QGroupBox \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/include/QtWidgets/qgroupbox.h \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/include/QtCore/QObject \
+		/home/SloPo/Software/Qt/5.11.0/gcc_64/include/QtWidgets/QComboBox \
+		/home/SloPo/Software/Qt/5.11.0/gcc_64/include/QtWidgets/qcombobox.h \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/include/QtGui/QPainter \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/include/QtGui/qpainter.h \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/include/QtGui/qtextoption.h \
@@ -1188,6 +1192,8 @@ linewidget.o: ../EMissionGUI/linewidget.cpp ../EMissionGUI/linewidget.h \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/include/QtWidgets/QGroupBox \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/include/QtWidgets/qgroupbox.h \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/include/QtCore/QObject \
+		/home/SloPo/Software/Qt/5.11.0/gcc_64/include/QtWidgets/QComboBox \
+		/home/SloPo/Software/Qt/5.11.0/gcc_64/include/QtWidgets/qcombobox.h \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/include/QtGui/QPainter \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/include/QtGui/qpainter.h \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/include/QtGui/qtextoption.h \

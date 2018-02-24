@@ -8,21 +8,18 @@
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_ONLY_PNG
 #include "stb_image.h"
+#include "main.h"
 #include<time.h>
 
 using namespace std;
 
 #define CHANNEL_NO 3
 	
-int trivialMatrix(char* filename, double tolerance, bool infinite,double max, double n) {
+int trivialMatrix(char* filename, double tolerance, bool infinite,double max){
   int width, height, bpp;
+  double n=1.1;
   //char filename[25]="";
   
-  /*if(argc!=2){
-    puts("Please use the following syntax:");
-    puts("<program_name> <image_name>.png");
-    exit(1);
-    }*/
   
   //strcpy(filename, argv[1]);
   

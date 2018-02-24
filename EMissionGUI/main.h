@@ -15,9 +15,10 @@
 #include<math.h>
 #include<cmath>
 #include<time.h>
+
 using namespace std;
 
-void trivialMatrix(char* filename, double tolerance, bool infinite, double max);
+int trivialMatrix(char* filename, double tolerance, bool infinite, double max);
 
 int EasyPlotting();
 
