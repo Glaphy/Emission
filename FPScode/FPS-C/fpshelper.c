@@ -156,10 +156,12 @@ void plotData(int skipEveryX, int skipEveryY, int scaleFactor){
 	sprintf(skipEveryP, "splot \"potentials.dat\" every %d:%d", skipEveryX, skipEveryY);
 	sprintf(skipEveryE, "plot \"electricfield.dat\" every %d:%d u 1:2:3:4 w vectors nofilled head lw 1", skipEveryX, skipEveryY);
 
-	char* gpElectric[]={"set term qt 1", skipEveryE};
+	char* gpElectric[]={"set term qt 1", "set xrange [75:424]", \
+		"set yrange [75:424]", skipEveryE};
 
-	char* gpPotential[]={"set term qt 0", "set pm3d", "set hidden3d",\
-		 skipEveryP, "pause mouse key", "if (MOUSE_KEY != 27) reread"};
+	char* gpPotential[]={"set term qt 0", "set pm3d", "set xrange [75:424]"\
+		 , "set yrange [75:424]", skipEveryP, "pause mouse key", \
+			 "if (MOUSE_KEY != 27) reread"};
 
 	int gpElectricLen=(double)sizeof(gpElectric)/sizeof(char*);
 	int gpPotentialLen=(double)sizeof(gpPotential)/sizeof(char*);

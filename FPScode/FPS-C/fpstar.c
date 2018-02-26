@@ -32,7 +32,7 @@ int main(int argc, char** argv){
 
 	//Reserve variables for height, width, and bits per pixel of the PNG.
 	int width, height, bpp;
-	char filename[25]="";
+	char filename[50], convertcmd[128], cropcmd[128];
 	int skipEveryX=atoi(argv[2]), skipEveryY=atoi(argv[3]);
 	strcpy(filename, argv[1]);
 
@@ -43,9 +43,16 @@ int main(int argc, char** argv){
 	
 	//Start the clock for the pre-solving 
 	start_clock=clock();
+
+	sprintf(convertcmd, "convert %s -gravity center -extent 500x500 %s", filename, filename);
+	system(convertcmd);
+
 	//Load the PNG into memory.
 	unsigned char *rgb_image=stbi_load(filename, &width, &height, &bpp, CHANNEL_NO);
 	int N=height, Nsquare=N*N;
+
+	sprintf(cropcmd, "convert %s -gravity Center -crop 350x350+0+0 +repage %s", filename, filename);
+	system(cropcmd);
 	
 	//Dynamically Allocate space for the A and b matrices.
 	double *b=calloc(Nsquare, sizeof(double));
