@@ -25,5 +25,3 @@ clean:
 
 uncluttered:
 	rm *.o
-
-#gcc -Wall -std=c99 -o fpstar.out fpstar.c fpshelper.c csparse.c /usr/local/lib64/libsuperlu.a /usr/lib64/OpenBLAS/lib/libopenblas_haswellp-r0.3.0.dev.so -lm

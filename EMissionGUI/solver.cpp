@@ -10,7 +10,6 @@
 #include "stb_image.h"
 #include "main.h"
 #include<time.h>
-
 using namespace std;
 
 #define CHANNEL_NO 3
@@ -18,6 +17,9 @@ using namespace std;
 int trivialMatrix(char* filename, double tolerance, bool infinite,double max){
   int width, height, bpp;
   double n=1.1;
+  //Gnuplot gp;
+
+
   //char filename[25]="";
   
   
@@ -142,8 +144,8 @@ int trivialMatrix(char* filename, double tolerance, bool infinite,double max){
   
   //centering the presented matrix
   int shiftx, shifty;
-  shiftx=(xmax2-height)/2;
-  shifty=(ymax2-width)/2;
+  shiftx=(xmax2-height)/2 +1;
+  shifty=(ymax2-width)/2 +1;
   
   
   
@@ -322,6 +324,12 @@ int trivialMatrix(char* filename, double tolerance, bool infinite,double max){
     grad << " " << endl;
   }
   grad.close();
+  cout<<"POOP";
+
+//  gp << "set pm3d\n";
+//  gp << "splot 'datpic.dat'\n";
+//  gp << "pause mouse key\n";
+//  gp << "if (MOUSE_KEY != 9) reread\n";
 
   return 0;
 }
