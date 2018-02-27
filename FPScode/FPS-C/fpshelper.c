@@ -49,7 +49,7 @@ void genSparseFile(FILE* sparseTripletFile, int height, int width, float canvas[
 	fprintf(sparseTripletFile, ".");
 }
 
-void png2ElectroData(int height, int width, unsigned char *rgb_image, float canvas[height][width][2], float maxV){
+void png2ElectroData(int height, int width, unsigned char *rgb_image, float canvas[height][width][2], int maxV){
 
 	/*DESCRIPTION:
 	use maxV to calculate volatge from colors:
@@ -81,11 +81,11 @@ void png2ElectroData(int height, int width, unsigned char *rgb_image, float canv
 				canvas[i/3][j/3][1] = 1;	//if not white => defined
 
 				if (redvalue != 0) { //check if red
-					canvas[i/3][j/3][0] = redvalue * maxV / 255;	//positive V
+					canvas[i/3][j/3][0] = (redvalue * maxV) / 255;	//positive V
 				}
 
 				else if(greenvalue != 0){ //check if green 
-					canvas[i/3][j/3][0] = - greenvalue * maxV / 255; //negative V
+					canvas[i/3][j/3][0] = - (greenvalue * maxV) / 255; //negative V
 				}
 
 				else{ //has to be black
@@ -112,7 +112,7 @@ void printPlotData(char *what, SuperMatrix *A) {
 	
 	gradx = dp[0] - dp[1];
 	grady = dp[0] - dp[nroot];
-	scalefactor = 4*sqrt(gradx*gradx+grady*grady);
+	scalefactor = 4; //*sqrt(gradx*gradx+grady*grady);
 
 	for (i = 0; i < A->nrow; i++) {
 		gradx = dp[i] - dp[i+1];
@@ -156,20 +156,20 @@ void plotData(int skipEveryX, int skipEveryY, int scaleFactor){
 	sprintf(skipEveryP, "splot \"potentials.dat\" every %d:%d", skipEveryX, skipEveryY);
 	sprintf(skipEveryE, "plot \"electricfield.dat\" every %d:%d u 1:2:3:4 w vectors nofilled head lw 1", skipEveryX, skipEveryY);
 
-	char* gpElectric[]={"set term qt 1", "set xrange [75:424]", \
-		"set yrange [75:424]", skipEveryE};
+	/*char* gpElectric[]={"set term qt 1", "set xrange [75:424]", \
+		"set yrange [75:424]", skipEveryE};*/
 
-	char* gpPotential[]={"set term qt 0", "set pm3d", "set xrange [75:424]"\
-		 , "set yrange [75:424]", skipEveryP, "pause mouse key", \
-			 "if (MOUSE_KEY != 27) reread"};
+	char* gpPotential[]={"set term qt", "set pm3d", "set xrange [75:424]"\
+		, "set title \"Potential\"", "set yrange [75:424]", skipEveryP,\
+			"pause mouse key", "if (MOUSE_KEY != 27) reread"};
 
-	int gpElectricLen=(double)sizeof(gpElectric)/sizeof(char*);
+	//int gpElectricLen=(double)sizeof(gpElectric)/sizeof(char*);
 	int gpPotentialLen=(double)sizeof(gpPotential)/sizeof(char*);
 
 
-	for(int i=0; i<gpElectricLen; i++){
+	/*for(int i=0; i<gpElectricLen; i++){
 		fprintf(gpProcess,"%s\n", gpElectric[i]);
-	}
+	}*/
 
 	for(int i=0; i<gpPotentialLen; i++){
 		fprintf(gpProcess,"%s\n", gpPotential[i]);

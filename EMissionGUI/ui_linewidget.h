@@ -189,7 +189,7 @@ public:
         //Drop down list to choose method
 
 
-        QStringList methods = {"Iterative","Matrix"};
+        QStringList methods = {"Iterative","Direct"};
         MethodBox = new QComboBox(lineWidget);
         MethodBox->addItems(methods);
         MethodBox->setGeometry(610,280,100,30);

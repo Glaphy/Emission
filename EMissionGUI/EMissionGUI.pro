@@ -29,7 +29,8 @@ SOURCES += \
         main.cpp \
         linewidget.cpp \
     EasyPlotting.cpp \
-    solver.cpp
+    solver.cpp \
+    EasyQuiver.cpp
 
 HEADERS += \
     ui_linewidget.h \
@@ -39,3 +40,6 @@ HEADERS += \
 
 FORMS += \
         linewidget.ui
+
+SUBDIRS += \
+    EMissionGUI.pro

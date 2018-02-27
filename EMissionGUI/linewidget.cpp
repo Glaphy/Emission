@@ -34,7 +34,7 @@ lineWidget::lineWidget(QWidget *parent) :
     MaxVolts=5000;
 
     //Error tolerance variable
-    Errvar= 0.01;
+    Errvar= 0.000002;
 
     //preset Arc angle values
     SpanAngle = 60*16;
@@ -238,12 +238,11 @@ void lineWidget::on_btnVoltage_clicked(){
 void lineWidget::on_btnErrtol_clicked(){
     //! [0]
         bool ok;
-        double i = QInputDialog::getDouble(this, tr("Percentage Error tolerance for Iterative method"),
-                                     tr("Please input a float value (Value entered -E6):"), 0,0, 100, 4, &ok);
+        double i = QInputDialog::getDouble(this, tr("Percentage Error for Iterative method"),
+                                     tr("Please input a float value (minimum value 0.2):"), 0,0.2, 100, 2, &ok);
         if (ok){
-            Errvar = i;
+            Errvar = pow(((i-0.22)/(1458)),1/0.84);
         }
-
     //! [0]
 }
 
@@ -326,8 +325,9 @@ void lineWidget::on_btnUpload_clicked(){
     //! [0]
         bool ok;
         QString filename = QInputDialog::getText(this, tr("Upload PNG"),
-                                     tr("Provide filename of PNG:"), QLineEdit::Normal, "", &ok);
+                                     tr("Provide filepath to PNG:"), QLineEdit::Normal, "", &ok);
         if (ok && !filename.isEmpty()){
+            filename = "../Charge-Pics/"+filename;
             mPix.load(filename);
             QFile file("datpic.png");
             mPix.save(&file,"PNG",-1);

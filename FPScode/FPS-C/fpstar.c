@@ -25,15 +25,15 @@ int main(int argc, char** argv){
 	double total_clock;
 
 	//check for arguments
-	if(argc!=4){
-		printf("Program Syntax:\n\n./<program_name> <image>.png <skip X> <skip Y>\n\n");
+	if(argc!=5){
+		printf("Program Syntax:\n\n./<program_name> <image>.png <skip X> <skip Y> <max_voltage>\n\n");
 		exit(INPUT_FAILURE);
 	}
 
 	//Reserve variables for height, width, and bits per pixel of the PNG.
 	int width, height, bpp;
 	char filename[50], convertcmd[128], cropcmd[128];
-	int skipEveryX=atoi(argv[2]), skipEveryY=atoi(argv[3]);
+	int skipEveryX=atoi(argv[2]), skipEveryY=atoi(argv[3]), maxV=atoi(argv[4]);
 	strcpy(filename, argv[1]);
 
 	if(fopen(filename, "r")==NULL){
@@ -59,9 +59,6 @@ int main(int argc, char** argv){
 
 	//Initialise array to hold canvas data i.e, charge and geometry.
 	float (*canvas)[width][2]=malloc(sizeof(float[height][width][2]));
-
-	//The maximum voltage the user will specify.	!CHANGE!
-	float maxV = 1000;
 
 	//create a file which will hold the Sparse Triplet
 	FILE* sparseTripletFile=fopen("sparsematrix.dat", "w+");
@@ -113,10 +110,6 @@ int main(int argc, char** argv){
 	asub = CC->i; //of size nzmax
 	xa = CC->p; //of size n(columns) + 1
 	
-	//End timing of pre-solving part of the code and print the results.
-	end_clock=clock();
-	total_clock=(double)(end_clock-start_clock)/CLOCKS_PER_SEC;
-	printf("\n\n********%f********\n\n", total_clock);
 
 	//*****SOLVING THE SYSTEM WITH LU DECOMPOSITION FROM SUPERLU*****//
 	
@@ -143,6 +136,11 @@ int main(int argc, char** argv){
 
 	//Solve the linear system.
 	dgssv(&options, &A, perm_c, perm_r, &L, &U, &B, &stat, &info);
+
+	//End timing. 
+	end_clock=clock();
+	total_clock=(double)(end_clock-start_clock)/CLOCKS_PER_SEC;
+	printf("\n\nTime take: %fs\n\n", total_clock);
 
 	printPlotData("\nSOLUTION", &B);	
 	plotData(skipEveryX,skipEveryY,100);

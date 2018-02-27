@@ -1,5 +1,7 @@
 set pm3d
 set palette rgb 22,13,-31
-set terminal postscript color
+set terminal qt 0
 set output "GnuPlates.eps" 
-splot "datpic.dat" with lines
+splot "Potential.dat" with lines
+pause mouse key
+if (MOUSE_KEY != 27) reread

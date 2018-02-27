@@ -53,11 +53,13 @@ OBJECTS_DIR   = ./
 SOURCES       = ../EMissionGUI/main.cpp \
 		../EMissionGUI/linewidget.cpp \
 		../EMissionGUI/EasyPlotting.cpp \
-		../EMissionGUI/solver.cpp moc_linewidget.cpp
+		../EMissionGUI/solver.cpp \
+		../EMissionGUI/EasyQuiver.cpp moc_linewidget.cpp
 OBJECTS       = main.o \
 		linewidget.o \
 		EasyPlotting.o \
 		solver.o \
+		EasyQuiver.o \
 		moc_linewidget.o
 DIST          = /home/SloPo/Software/Qt/5.11.0/gcc_64/mkspecs/features/spec_pre.prf \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/mkspecs/common/unix.conf \
@@ -249,7 +251,8 @@ DIST          = /home/SloPo/Software/Qt/5.11.0/gcc_64/mkspecs/features/spec_pre.
 		../EMissionGUI/main.h ../EMissionGUI/main.cpp \
 		../EMissionGUI/linewidget.cpp \
 		../EMissionGUI/EasyPlotting.cpp \
-		../EMissionGUI/solver.cpp
+		../EMissionGUI/solver.cpp \
+		../EMissionGUI/EasyQuiver.cpp
 QMAKE_TARGET  = EMissionGUI
 DESTDIR       = 
 TARGET        = EMissionGUI
@@ -654,7 +657,7 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /home/SloPo/Software/Qt/5.11.0/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../EMissionGUI/ui_linewidget.h ../EMissionGUI/linewidget.h ../EMissionGUI/stb_image.h ../EMissionGUI/main.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../EMissionGUI/main.cpp ../EMissionGUI/linewidget.cpp ../EMissionGUI/EasyPlotting.cpp ../EMissionGUI/solver.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../EMissionGUI/main.cpp ../EMissionGUI/linewidget.cpp ../EMissionGUI/EasyPlotting.cpp ../EMissionGUI/solver.cpp ../EMissionGUI/EasyQuiver.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../EMissionGUI/linewidget.ui $(DISTDIR)/
 
 
@@ -1375,8 +1378,10 @@ EasyPlotting.o: ../EMissionGUI/EasyPlotting.cpp ../EMissionGUI/main.h \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/include/QtCore/QtGlobal
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o EasyPlotting.o ../EMissionGUI/EasyPlotting.cpp
 
-solver.o: ../EMissionGUI/solver.cpp ../EMissionGUI/stb_image.h \
-		../EMissionGUI/main.h \
+solver.o: ../EMissionGUI/solver.cpp ../EMissionGUI/stb_image.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o solver.o ../EMissionGUI/solver.cpp
+
+EasyQuiver.o: ../EMissionGUI/EasyQuiver.cpp ../EMissionGUI/main.h \
 		../EMissionGUI/linewidget.h \
 		../EMissionGUI/ui_linewidget.h \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/include/QtCore/QVariant \
@@ -1536,7 +1541,7 @@ solver.o: ../EMissionGUI/solver.cpp ../EMissionGUI/stb_image.h \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/include/QtGui/qtextoption.h \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/include/QtGui/qpen.h \
 		/home/SloPo/Software/Qt/5.11.0/gcc_64/include/QtCore/QtGlobal
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o solver.o ../EMissionGUI/solver.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o EasyQuiver.o ../EMissionGUI/EasyQuiver.cpp
 
 moc_linewidget.o: moc_linewidget.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_linewidget.o moc_linewidget.cpp

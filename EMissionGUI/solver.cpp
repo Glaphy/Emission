@@ -8,20 +8,21 @@
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_ONLY_PNG
 #include "stb_image.h"
-#include "main.h"
 #include<time.h>
+
 using namespace std;
 
 #define CHANNEL_NO 3
 	
-int trivialMatrix(char* filename, double tolerance, bool infinite,double max){
+int trivialMatrix(char* filename, double tolerance, bool infinite,double max) {
   int width, height, bpp;
-  double n=1.1;
-  //Gnuplot gp;
-
-
   //char filename[25]="";
   
+  /*if(argc!=2){
+    puts("Please use the following syntax:");
+    puts("<program_name> <image_name>.png");
+    exit(1);
+    }*/
   
   //strcpy(filename, argv[1]);
   
@@ -92,19 +93,24 @@ int trivialMatrix(char* filename, double tolerance, bool infinite,double max){
   
   //********//INITIATING VARIABLES//*********//
   
+  const double pi=3.141592654;
+
   double t=0; //time zero
   double tmax=10000;
   double error=0;
-  double dt=0.2;
+  double std;
+  double dt=0.25;
   double v=1;
   int xmin=0;
-  int xmax2=height*n;
+  int xmax2=height*(1.2);
   int xmax=xmax2-1;
-  int ymax2=width*n;
+  int ymax2=width*(1.2);
   int ymax=ymax2-1;
   int dx=1;
   double dy=dx;
   int y=0;
+  double rhoJacobi=(cos(pi/width)+(dx/dy)*(dx/dy)*cos(pi/height))/(1+(dx/dy)*(dx/dy));
+  double omega=2/(1+sqrt(1-rhoJacobi));
   double total;
   int stepx; 
   int stepy;	
@@ -120,7 +126,7 @@ int trivialMatrix(char* filename, double tolerance, bool infinite,double max){
   
   
   //********//INPUT FROM USER//*********//***************
-  char gauss_out_file[50]="datpic.dat";
+  char gauss_out_file[50]="Potential.dat";
   ofstream gauss_out ( gauss_out_file );
  
   
@@ -144,8 +150,8 @@ int trivialMatrix(char* filename, double tolerance, bool infinite,double max){
   
   //centering the presented matrix
   int shiftx, shifty;
-  shiftx=(xmax2-height)/2 +1;
-  shifty=(ymax2-width)/2 +1;
+  shiftx=(xmax2-height)/2;
+  shifty=(ymax2-width)/2 ;
   
   
   
@@ -217,23 +223,24 @@ int trivialMatrix(char* filename, double tolerance, bool infinite,double max){
     }
     
     //********//METHOD//*********//
-    
+
+    int N=height*width;
+
     //Looping through time 
     
     while (tmax >= t){
       double M_1;
       error=0;
-      total=0;
+      std=0;
       
       //staggered leapfrog ~ iterating through grid
       for(int j=xmin; j<ymax2; j++){
 	for(int i=xmin;i<xmax2;i++){
 	  if(i > xmin && i < xmax && j > xmin && j < ymax && uplus[j][i][1] == 0) {
 	    //Numerical method
-	    uplus[j][i][0]=u[j][i]+((v*dt)/(dx*dx))*(u[(j+1)][i]-(2*u[j][i])+u[(j-1)][i]+u[j][(i+1)]-(2*u[j][i])+u[j][(i-1)]); 
+	    uplus[j][i][0]=u[j][i]+((v*dt*omega)/(dx*dx))*(u[(j+1)][i]-(2*u[j][i])+uplus[(j-1)][i][0]+u[j][(i+1)]-(2*u[j][i])+uplus[j][(i-1)][0]); 
 	    //error
-	    error=error+abs(uplus[j][i][0]-u[j][i]);
-	    total=total+abs(uplus[j][i][0]);
+	    error=error+(abs(uplus[j][i][0]-u[j][i]))*(abs(uplus[j][i][0]-u[j][i]));
 	  }				
 	  
 	  //Boundaries//
@@ -248,11 +255,12 @@ int trivialMatrix(char* filename, double tolerance, bool infinite,double max){
 	  uplus[j][xmax][0]=uplus[j][(xmax-1)][0]-M_1;
 	
       }
+
+      std=sqrt((1.0/(N-1))*error)/max;
       
-      //cout << "Error tolerance reached: " << (error*100/total)*(1/dt)  << "% " << (10000-tmax)/dt << " iterations"<< endl;
       //ERROR CONTROL    
-      if ( (error*100/total)*(1/dt)  < tolerance && (10000-tmax)/dt != 0 ) {
-	cout << "Error tolerance reached: " << (error*100/total)*(1/dt)  << "% " << (10000-tmax)/dt << " iterations"<< endl;
+      if ( std < tolerance && (10000-tmax)/dt != 0 ) {
+    cout << "Error tolerance reached: " << std  << " Iterations:" << (10000-tmax)/dt << endl;
 	break;
       }
       
@@ -311,43 +319,37 @@ int trivialMatrix(char* filename, double tolerance, bool infinite,double max){
   
   for(int o=xmin;o<(ymax2-2*shifty);o=o+dx){
     for (int w=xmin;w<(xmax2-2*shiftx);w=w+dx){
-      ugradx[o][w]=-(u[(o+shifty)][(w+shiftx)]-u[(o+shifty)][(w+shiftx+1)]);
-      ugrady[o][w]=-(u[(o+shifty)][(w+shiftx)]-u[(o+shifty+1)][(w+shiftx)]);
-      
+      ugradx[o][w]=(u[(o+shifty)][(w+shiftx)]-u[(o+shifty)][(w+shiftx+1)]);
+      ugrady[o][w]=(u[(o+shifty)][(w+shiftx)]-u[(o+shifty+1)][(w+shiftx)]);
+
     }
   }
  
-  for(int j=0;j<(ymax2-2*shifty);j=j+2*stepy*dx){
-    for(int i=0;i<(xmax2-2*shiftx);i=i+2*stepx*dx){
-      grad << xvalues[i] << " " << yvalues[j] << " " << ugradx[j][i]*sqrt(height*height+width*width)/(max)<< " " << ugrady[j][i]*sqrt(height*height+width*width)/(max) << endl;
+  for(int j=0;j<(ymax2-2*shifty);j=j+3*(stepy)*dx){
+    for(int i=0;i<(xmax2-2*shiftx);i=i+3*(stepx)*dx){
+      grad << xvalues[i] << " " << yvalues[j] << " " << ugradx[j][i]*sqrt(height*height+width*width)/(1*max)<< " " << ugrady[j][i]*sqrt(height*height+width*width)/(1*max) << endl;
     }
     grad << " " << endl;
   }
   grad.close();
-  cout<<"POOP";
-
-//  gp << "set pm3d\n";
-//  gp << "splot 'datpic.dat'\n";
-//  gp << "pause mouse key\n";
-//  gp << "if (MOUSE_KEY != 9) reread\n";
 
   return 0;
 }
 
 
-/*
-int main(int argc, char* argv[]) {
+
+/*int main(int argc, char* argv[]) {
   clock_t start_t,end_t;
   start_t=clock();
-  char png_name[]="circle.png";
-  double n=atof(argv[1]);
-  double tolerance=0.001;
-  bool infinite=true;
+  char png_name[]="thebaneofmyexistence.png";
+  //double n=atof(argv[1]);
   double max=10000;
-  trivialMatrix(png_name,tolerance,infinite,max, n);
+  double tolerance=0.000002;
+  bool infinite=true;
+  trivialMatrix(png_name,tolerance,infinite,max);
   end_t=clock();
   cout<< (double)(end_t-start_t)/CLOCKS_PER_SEC << endl;
   return 0;
-}*/
+  }*/
 
 

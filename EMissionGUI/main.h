@@ -22,4 +22,6 @@ int trivialMatrix(char* filename, double tolerance, bool infinite, double max);
 
 int EasyPlotting();
 
+int EasyQuiver();
+
 #endif
