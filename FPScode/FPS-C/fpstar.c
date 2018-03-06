@@ -32,8 +32,7 @@ int main(int argc, char** argv){
 
 	//Reserve variables for height, width, and bits per pixel of the PNG.
 	int width, height, bpp;
-	char filename[50], convertcmd[128], cropcmd[128];
-	int skipEveryX=atoi(argv[2]), skipEveryY=atoi(argv[3]), maxV=atoi(argv[4]);
+	char filename[50]; 
 	strcpy(filename, argv[1]);
 
 	if(fopen(filename, "r")==NULL){
@@ -44,16 +43,10 @@ int main(int argc, char** argv){
 	//Start the clock for the pre-solving 
 	start_clock=clock();
 
-	sprintf(convertcmd, "convert %s -gravity center -extent 500x500 %s", filename, filename);
-	system(convertcmd);
-
 	//Load the PNG into memory.
 	unsigned char *rgb_image=stbi_load(filename, &width, &height, &bpp, CHANNEL_NO);
 	int N=height, Nsquare=N*N;
 
-	sprintf(cropcmd, "convert %s -gravity Center -crop 350x350+0+0 +repage %s", filename, filename);
-	system(cropcmd);
-	
 	//Dynamically Allocate space for the A and b matrices.
 	double *b=calloc(Nsquare, sizeof(double));
 
@@ -61,20 +54,20 @@ int main(int argc, char** argv){
 	float (*canvas)[width][2]=malloc(sizeof(float[height][width][2]));
 
 	//create a file which will hold the Sparse Triplet
-	FILE* sparseTripletFile=fopen("sparsematrix.dat", "w+");
+	FILE* COOfile=fopen("sparsematrix.dat", "w+");
 	
-	if(!sparseTripletFile){
+	if(!COOfile){
 		printf("Failed to generate sparse data file!\n");
 		exit(3);
 	}
 
 	//**********PARSING PNG DATA AND GENERATING PROBLEM DATA**********//
 
-	//These two functions convert the specified PNG into voltages based on colours
-	//fill the canvas, and update the sparseTriplet file and the b vector
-	//according to the specified geometry.
+	//These two functions convert the specified PNG into voltages based on
+	//colours fill the canvas, and update the sparseTriplet file and the b
+	//vector according to the specified geometry.
 	png2ElectroData(height, width, rgb_image, canvas, maxV);
-	genSparseFile(sparseTripletFile, height, width, canvas, N);
+	genSparseFile(COOfile, height, width, canvas, N);
 
 	//Linearising canvas as the b vector.
 	for(int i=0; i<N; i++){
@@ -86,10 +79,11 @@ int main(int argc, char** argv){
 	//**********CONVERTING FROM COO TO CCS FORMAT**********//
 
 	//reset pointer to start of file
-	fseek(sparseTripletFile,0,SEEK_SET);
+	fseek(COOfile,0,SEEK_SET);
 	
-	//load the Sparse Triplet file into cs ST form, then compress it to cs CC form
-	ST = cs_load(sparseTripletFile);
+	//load the Sparse Triplet file into cs ST form, then compress it to cs
+	//CC form
+	ST = cs_load(COOfile);
 	CC = cs_triplet(ST);
 	
 	//get some basic information from the cs CC fromat
@@ -137,10 +131,10 @@ int main(int argc, char** argv){
 	//Solve the linear system.
 	dgssv(&options, &A, perm_c, perm_r, &L, &U, &B, &stat, &info);
 
-	//End timing. 
+	//End timing.
 	end_clock=clock();
 	total_clock=(double)(end_clock-start_clock)/CLOCKS_PER_SEC;
-	printf("\n\nTime take: %fs\n\n", total_clock);
+	printf("\n\nTime Taken: %f seconds\n", total_clock);
 
 	printPlotData("\nSOLUTION", &B);	
 	plotData(skipEveryX,skipEveryY,100);
@@ -151,7 +145,7 @@ int main(int argc, char** argv){
 		StatPrint(&stat);
 
 	dQuerySpace(&L, &U, &mem_usage);
-	printf("L\\U MB %.3f\ttotal MB needed %.3f\n", mem_usage.for_lu/1e6, mem_usage.total_needed/1e6);
+	printf("L\\U MB %.3f\tTotal MB needed %.3f\n", mem_usage.for_lu/1e6, mem_usage.total_needed/1e6);
 
 	// De-allocate SLU storage
 	SUPERLU_FREE (perm_r);
@@ -163,7 +157,7 @@ int main(int argc, char** argv){
 	StatFree(&stat);
 	
 	//De-allocate other storage
-	fclose(sparseTripletFile);
+	fclose(COOfile);
 	free(canvas);
 	free(b);
 	stbi_image_free(rgb_image);

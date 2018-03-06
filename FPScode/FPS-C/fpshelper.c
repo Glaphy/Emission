@@ -1,6 +1,6 @@
 #include "fpstar.h"
 
-void genSparseFile(FILE* sparseTripletFile, int height, int width, float canvas[height][width][2], int N){
+void genSparseFile(FILE* COOfile, int height, int width, float canvas[height][width][2], int N){
 	int Nsquare=N*N;
 	int targets[Nsquare];
 
@@ -12,41 +12,52 @@ void genSparseFile(FILE* sparseTripletFile, int height, int width, float canvas[
 	}
 
 	for(int i=0; i<Nsquare; i++){
-
 		//Code if the current canvas pixel is NOT a specified value.
 		if(targets[i]==0){
 			//Inserts the leftmost band of ones.
 			if(i>=N){
-				fprintf(sparseTripletFile, "%d %d 1\n", i, i-N);
+				fprintf(COOfile, "%d %d 1\n", i, i-N);
 			}
 
 			//Inserts the band to the left of the leading diagonal.
 			if(i%N!=0){
-				fprintf(sparseTripletFile, "%d %d 1\n", i, i-1);
+				fprintf(COOfile, "%d %d 1\n", i, i-1);
 			}
 
 			//The leading diagonal.
-			fprintf(sparseTripletFile, "%d %d -4\n", i, i);
+			if(i==0 || i==N-1 || i==N*(N-1) || i==Nsquare-1){
+				fprintf(COOfile, "%d %d -2\n", i, i);
+			} else if(i<N){
+				fprintf(COOfile, "%d %d -3\n", i, i);
+			} else if(i%N==0){
+				fprintf(COOfile, "%d %d -3\n", i, i);
+			} else if((i+1)%N==0){
+				fprintf(COOfile, "%d %d -3\n", i, i);
+			} else if(i>N*(N-1)){
+				fprintf(COOfile, "%d %d -3\n", i, i);
+			} else {
+				fprintf(COOfile, "%d %d -4\n", i, i);
+			}
 
 			//The band to the right of the leading diagonal.
 			if((i+1)%N!=0){
-				fprintf(sparseTripletFile, "%d %d 1\n", i, i+1);
+				fprintf(COOfile, "%d %d 1\n", i, i+1);
 			}
 
 			//Inserts the rightmost band of ones.
 			if(i<N*(N-1)){
-				fprintf(sparseTripletFile, "%d %d 1\n", i, i+N);
+				fprintf(COOfile, "%d %d 1\n", i, i+N);
 			}
 		}
 
-		//Code if the current canvas pixel is NOT a specified value.
+		//Code if the current canvas pixel is a specified value.
 		else{
-			fprintf(sparseTripletFile, "%d %d 1\n", i, i);
+			fprintf(COOfile, "%d %d 1\n", i, i);
 		}
 	}
 
 	//The period acts as a delimiter.
-	fprintf(sparseTripletFile, ".");
+	fprintf(COOfile, ".");
 }
 
 void png2ElectroData(int height, int width, unsigned char *rgb_image, float canvas[height][width][2], int maxV){
@@ -129,7 +140,7 @@ void printPlotData(char *what, SuperMatrix *A) {
 			fprintf(electrofile,"%d %d %f %f\n", columncounter, (i%nroot), normy, normx);
 		}
 
-		fprintf(voltagefile,"%d %d %f\n", columncounter, (i%nroot), dp[i]);
+		fprintf(voltagefile,"%d %d %.16f\n", columncounter, (i%nroot), dp[i]);
 
 		//Make a newline between each full row in the files.
 		if(counter % nroot == 0){
@@ -153,23 +164,21 @@ void plotData(int skipEveryX, int skipEveryY, int scaleFactor){
 	char skipEveryP[40]="";
 	char skipEveryE[256]="";
 
-	sprintf(skipEveryP, "splot \"potentials.dat\" every %d:%d", skipEveryX, skipEveryY);
+	sprintf(skipEveryP, "splot \"potentials.dat\" every %d:%d w l", skipEveryX, skipEveryY);
 	sprintf(skipEveryE, "plot \"electricfield.dat\" every %d:%d u 1:2:3:4 w vectors nofilled head lw 1", skipEveryX, skipEveryY);
 
-	/*char* gpElectric[]={"set term qt 1", "set xrange [75:424]", \
-		"set yrange [75:424]", skipEveryE};*/
+	char* gpElectric[]={"set term qt 1", skipEveryE};
 
-	char* gpPotential[]={"set term qt", "set pm3d", "set xrange [75:424]"\
-		, "set title \"Potential\"", "set yrange [75:424]", skipEveryP,\
-			"pause mouse key", "if (MOUSE_KEY != 27) reread"};
+	char* gpPotential[]={"set term qt 0", "set pm3d", skipEveryP, \
+		"pause mouse key", "if (MOUSE_KEY != 27) reread"};
 
-	//int gpElectricLen=(double)sizeof(gpElectric)/sizeof(char*);
+	int gpElectricLen=(double)sizeof(gpElectric)/sizeof(char*);
 	int gpPotentialLen=(double)sizeof(gpPotential)/sizeof(char*);
 
 
-	/*for(int i=0; i<gpElectricLen; i++){
+	for(int i=0; i<gpElectricLen; i++){
 		fprintf(gpProcess,"%s\n", gpElectric[i]);
-	}*/
+	}
 
 	for(int i=0; i<gpPotentialLen; i++){
 		fprintf(gpProcess,"%s\n", gpPotential[i]);
