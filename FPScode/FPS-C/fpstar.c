@@ -31,7 +31,7 @@ int main(int argc, char** argv){
 	}
 
 	//Reserve variables for height, width, and bits per pixel of the PNG.
-	int width, height, bpp;
+	int width, height, bpp, skipEveryX=atoi(argv[2]), skipEveryY=atoi(argv[3]), maxV=atoi(argv[4]);
 	char filename[50]; 
 	strcpy(filename, argv[1]);
 

@@ -16,7 +16,7 @@
 #include <time.h>
 #include "csparse.h"
 
-void png2ElectroData(int height, int width, unsigned char *rgb_image, float canvas[height][width][2], float maxV);
+void png2ElectroData(int height, int width, unsigned char *rgb_image, float canvas[height][width][2], int maxV);
 void genSparseFile(FILE* COOfile, int height, int width, float canvas[height][width][2], int N);
 void printPlotData(char *what, SuperMatrix *A);
 void plotData(int skipEveryX, int skipEveryY, int scaleFactor);
