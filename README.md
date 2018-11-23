@@ -1,3 +1,5 @@
+![banner](images/intro.png)
+
 # Emission
 Emission is a project which takes in user-defined geometries and charges and uses the Laplace Equation to plot potential and electric fields.
 
