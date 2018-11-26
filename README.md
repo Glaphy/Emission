@@ -19,6 +19,7 @@ A more detailed performance and analysis report can be found in the repository,
 * Qt5 development toolkit
 * SuperLU
 * ATLAS
+* Gnuplot with gnuplot-qt
 
 ### Installation
 
