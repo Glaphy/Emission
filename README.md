@@ -1,15 +1,36 @@
 ![banner](images/intro.png)
 
 # Emission
-Emission is a project which takes in user-defined geometries and charges and uses the Laplace Equation to plot potential and electric fields.
-
-The GUI is written in Qt and the plots are generated through GNUplot. There are two methods to caluclate the fields, one is the iterative method and relies on FDTD techniques and the other is the direct method which depends on sparse matrix computations performed by BLAS libraries.
+Emission is a project which takes in user-defined geometries and charges and
+uses the Laplace Equation to plot potential and electric fields.  The GUI is
+written in Qt and the plots are generated through Gnuplot. There are two
+methods to calculate the fields, one is the iterative method and relies on FDTD
+techniques and the other is the direct method which depends on sparse matrix
+computations performed by BLAS libraries. 
 
 ## Build Instructions:
-1. Do not write to the master branch directly.
-2. Create a pull request before merging with master.
-3. Prune unecessary branches.
-4. Try to Update the project board.
-5. Praise our lord and savior Lucifer.
-	
+
+### Dependencies:
+
+* Qt5 development toolkit
+* SuperLU
+* ATLAS
+
+### Installation
+
+1. Install dependencies
+2. Change directory to source/direct_method/
+    a. Change the path of slu_ddef.h specified in fpstar.h to it's location
+    on your system.
+    b. Change source/direct_method/Makefile LDFLAGS to point to the locations
+    of the SuperLU and ATLAS libraries on your system.
+    c. Run make. Move the compiled executable fpstar.out to source/main/
+    d. In source/main/ qmake on the file Emission.pro such as qmake
+    Emission.pro. Note that qmake might be called qmake-qt5 or some variation
+    thereof on your computer.
+    e. Once the Makefile has been generated in the source/main directory run
+    make again.
+    f. The finished Emission executable can now be run. Note that it must be
+    kept in the same directory as fpstar.out for the direct method to work.
+
 We can add things to this README as the project fleshes out.
