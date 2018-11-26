@@ -2,11 +2,15 @@
 
 # Emission
 Emission is a project which takes in user-defined geometries and charges and
-uses the Laplace Equation to plot potential and electric fields.  The GUI is
-written in Qt and the plots are generated through Gnuplot. There are two
+uses the Laplace Equation to plot potential and electric fields. There are two
 methods to calculate the fields, one is the iterative method and relies on FDTD
 techniques and the other is the direct method which depends on sparse matrix
 computations performed by BLAS libraries. 
+
+The GUI is written in Qt and the plots are generated through Gnuplot.
+
+A more detailed performance and analysis report can be found in the repository,
+'ProjectReport.pdf'
 
 ## Build Instructions:
 
