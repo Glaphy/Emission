@@ -47,4 +47,4 @@ A more detailed performance and analysis report can be found in the repository,
     kept in the same directory as fpstar.out for the direct method to work.
 
 ### Acknowledgements
-We would like to acknowledge the use of [SuperLU](https://github.com/xiaoyeli/superlu) and the [stb image library](https://github.com/nothings/stb) in our project.
+We would like to acknowledge the use of [SuperLU](https://github.com/xiaoyeli/superlu),(CSPARSE)[https://people.sc.fsu.edu/~jburkardt/c_src/csparse/csparse.html], and the [stb image library](https://github.com/nothings/stb) in our project.
