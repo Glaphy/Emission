@@ -45,3 +45,6 @@ A more detailed performance and analysis report can be found in the repository,
 
     f. The finished Emission executable can now be run. Note that it must be
     kept in the same directory as fpstar.out for the direct method to work.
+
+### Acknowledgements
+We would like to acknowledge the use of [SuperLU](https://github.com/xiaoyeli/superlu) and the [stb image library](https://github.com/nothings/stb) in our project.
