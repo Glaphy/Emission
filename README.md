@@ -10,7 +10,7 @@ computations performed by BLAS libraries.
 The GUI is written in Qt and the plots are generated through Gnuplot.
 
 A more detailed performance and analysis report can be found in the repository,
-'ProjectReport.pdf'
+'ProjectReport.pdf'. The associated presentation is called 'Emission.pdf'
 
 ## Build Instructions:
 
